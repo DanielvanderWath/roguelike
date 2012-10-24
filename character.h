@@ -15,12 +15,13 @@ private:
 	Race *race;
 	//Class *cclass;
 	Armour *armour;
-	//Hand *left, *right;
+	Hand *left, *right;
 	list<Item*> inventory;
 public:
 	Character(void);
 	~Character(void);
 	Character(const char *n, Race *r);
+	Armour* getArmour(void);
 	void dumpStats(int indent);
 	void equip(Armour *a);
 	void unequip(Item *a);

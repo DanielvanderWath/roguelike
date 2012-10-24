@@ -6,6 +6,8 @@ SRC = 	main.cpp \
 	character.cpp \
 	race.cpp \
 	item.cpp \
+	weapon.cpp \
+	hand.cpp \
 	armour.cpp
 
 LIB = 

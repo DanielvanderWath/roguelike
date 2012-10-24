@@ -1,20 +1,11 @@
 #include "race.h"
 #include <string.h>
-#include <ctime>
 #include <cstdlib>
 
 Race::Race(void){}
 Race::~Race(void){}
 Race::Race(const char *n, int hpm, int hpv, int mpm, int mpv)
 {
-	static bool randInit = false;
-
-	if(randInit == false)
-	{
-		srand(time(0));
-		randInit = true;
-	}
-
 	_name = new char[strlen(n) +1];
 	strcpy(_name, n);
 

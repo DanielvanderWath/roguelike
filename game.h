@@ -3,6 +3,7 @@
 
 #include "race.h"
 #include "armour.h"
+#include "weapon.h"
 #include "character.h"
 
 //TODO: make this safe

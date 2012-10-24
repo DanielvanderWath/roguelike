@@ -1,10 +1,18 @@
 #include <iostream>
 #include "game.h"
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
+void init(void)
+{
+	srand(time(0));
+}
+
 int main(int argc, char **argv)
 {
+	init();
 	//TODO: load this from a file later
 	//int num_races = 3;
 	Race races[]={	Race("Human", 8, 4, 8, 4),
@@ -16,8 +24,15 @@ int main(int argc, char **argv)
 
 	//a piece of armour
 	Armour *breastPlate = new Armour("Lazarus Suit", 5, 0x05000000, ARMOUR_SPECIAL_REGEN);
-
 	pc.equip(breastPlate);
+
+	//a weapon
+	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, true);
+	pc.equip(dagger, HAND_LEFT);
+	pc.dumpStats(0);
+
+	pc.unequip(pc->lefthand());
+
 	pc.dumpStats(0);
 	return 0;
 }
