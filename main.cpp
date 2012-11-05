@@ -23,8 +23,8 @@ int main(int argc, char **argv)
 	Character pc = Character("Dan", &races[0], MALE);
 
 	//a piece of armour
-	Armour *breastPlate = new Armour("Lazarus Suit", 5, 0x05000000, ARMOUR_SPECIAL_REGEN);
-	pc.equip(breastPlate, SLOT_ARMOUR);
+	Armour *breastPlate = new Armour("Lazarus Suit", 5, Resistance(5, 0, 0, 0), ARMOUR_SPECIAL_REGEN, list<int>(1, SLOT_TORSO));
+	pc.equip(breastPlate, SLOT_TORSO);
 
 	//a weapon
 	Weapon *sledge = new Weapon("Massive sledgehammer", 8, 6, 2, 4, 0, false);
@@ -33,11 +33,12 @@ int main(int argc, char **argv)
 	//and another
 	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
 	pc.equip(dagger, SLOT_HAND_RIGHT);
-	cout << "Dagger has been equipped in slot: " <<  dagger->getSlot() << endl;
-	
+	pc.dumpStats(0);
+	pc.unequip(sledge);
+	pc.equip(dagger, SLOT_HAND_RIGHT);
+
 	pc.dumpStats(0);
 
-	cout << "\nUnequipping dagger\n" << endl;
 	pc.unequip(dagger);
 
 	pc.dumpStats(0);

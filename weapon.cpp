@@ -22,11 +22,9 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int 
 	onehanded = one;
 
 	icon = ')';
-}
 
-bool Weapon::isOneHanded(void)
-{
-	return onehanded;
+	allowed_slots.push_back(SLOT_HAND_LEFT);
+	allowed_slots.push_back(SLOT_HAND_RIGHT);
 }
 
 void Weapon::dumpSpecials(int s, int indent)

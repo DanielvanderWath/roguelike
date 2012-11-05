@@ -27,7 +27,7 @@ Character::Character(const char *n, Race *r, Gender g)
 	mp = mpmax;
 
 	/*cclass = NULL;*/
-	armour =NULL;	
+	torso =NULL;	
 	left = NULL;
 	right = NULL;
 }
@@ -43,7 +43,7 @@ void Character::dumpStats(int indent)
 	INDENTER(indent, indenter)
 	cout << indenter << "Name:\t" << name << "\n" << indenter << "Race:\t" << race->name() << "\n" << indenter << "HP:\t" << hpmax << "\n" << indenter << "MP:\t" << mpmax << "\n" << endl;
 
-	dump("Armour:", armour)
+	dump("Torso:", torso)
 	dump("Right Hand:", right)
 	dump("Left Hand:", left)
 
@@ -69,8 +69,8 @@ void Character::unequip(Item *a)
 {
 	switch(a->getSlot())
 	{
-		case SLOT_ARMOUR:
-			armour = NULL;		
+		case SLOT_TORSO:
+			torso = NULL;		
 			break;
 		case SLOT_HAND_LEFT:
 			left = NULL;
@@ -84,58 +84,90 @@ void Character::unequip(Item *a)
 	}
 	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
 	a->setSlot(0);//remove the reference to the equipment slot from the item
+	OUTPUT( "Unequipping " << a->getName());
 }
 
 void Character::equip(Item *a, int slot)
 {
-	switch(slot)
+	if(a->isAllowedInSlot(slot))
 	{
-		case SLOT_ARMOUR:
-			if(armour)
-				unequip(armour);
+		switch(slot)
+		{
+			case SLOT_TORSO:
+				if(torso)
+					unequip(torso);
 
-			armour = (Armour*)a;
-			a->setSlot(SLOT_ARMOUR);
-			break;
-		case SLOT_HAND_LEFT:
-			//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
-			if(right && !((Weapon*)right)->isOneHanded())
-			{
-				OUTPUT("Attempting to equip item in offhand while wielding twohander");
+				torso = (Armour*)a;
+				a->setSlot(SLOT_TORSO);
+				break;
+			case SLOT_HAND_LEFT:
+				//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
+				if(right && !((Hand*)right)->isOneHanded())
+				{
+					OUTPUT("Attempting to equip item in offhand while wielding twohander");
+					return;
+				}
+					
+				//if there is already something in this hand then unequip it
+				if(left)
+					unequip(left);
+
+				//if this is a twohander then unequip the item in the offhand
+				if(!((Hand*)a)->isOneHanded() && right)
+					unequip(right);
+
+				left = (Hand*)a;
+				a->setSlot(SLOT_HAND_LEFT);
+				break;
+			case SLOT_HAND_RIGHT:
+				//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
+				if(left && !((Hand*)left)->isOneHanded())
+				{
+					OUTPUT("Attempting to equip item in offhand while wielding twohander");
+					return;
+				}
+					
+				//if there is already something in this hand then unequip it
+				if(right)
+					unequip(right);
+
+				//if this is a twohander then unequip the item in the offhand
+				if(!((Hand*)a)->isOneHanded() && left)
+					unequip(left);
+
+				right = (Hand*)a;
+				a->setSlot(SLOT_HAND_RIGHT);
+				break;
+			default:
+				cout << "Error: Trying to equip item in invalid slot" << endl;
 				return;
-			}
-				
-			//if there is already something in this hand then unequip it
-			if(left)
-				unequip(left);
-
-			left = (Hand*)a;
-			a->setSlot(SLOT_HAND_LEFT);
-			break;
-		case SLOT_HAND_RIGHT:
-			//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
-			if(left && !((Weapon*)left)->isOneHanded())
-			{
-				OUTPUT("Attempting to equip item in offhand while wielding twohander");
-				return;
-			}
-				
-			//if there is already something in this hand then unequip it
-			if(right)
-				unequip(right);
-
-			right = (Hand*)a;
-			a->setSlot(SLOT_HAND_RIGHT);
-			break;
-		default:
-			cout << "Error: Trying to equip item in invalid slot" << endl;
-			return;
+		}
 	}
 }
 
-Armour* Character::getArmour(void)
+void Character::calcDefence(void)
 {
-	return armour;
+	//store the sum of all armours' AVs in AV
+	AV = 0;
+	if(torso)
+		AV += torso->getAV();
+	if(left && left->isShield())
+		AV += ((Armour*)left)->getAV();//TODO: change these Armours to Shields
+	if(right && right->isShield())
+		AV += ((Armour*)right)->getAV();
+
+	//and the resistances in resistance
+	resistance.zero();
+	if(torso)
+	{
+		resistance.add(torso->getResistance());
+
+	}
+}
+
+Armour* Character::getTorso(void)
+{
+	return torso;
 }
 
 Hand* Character::getLeftHand(void)

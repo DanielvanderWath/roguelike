@@ -8,6 +8,7 @@ SRC = 	armour.cpp \
 	weapon.cpp \
 	hand.cpp \
 	item.cpp \
+	resistance.cpp \
 	main.cpp
 
 LIB = 

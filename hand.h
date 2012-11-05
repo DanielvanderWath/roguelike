@@ -9,11 +9,15 @@ enum HAND_WHICH{
 
 class Hand : public Item
 {
-private:
+protected:
+	bool onehanded;
+	bool shield;
 public:
 	Hand(void);
 	virtual ~Hand(void);
 	virtual void dumpStats(int indent)=0;
+	bool isOneHanded(void);
+	bool isShield(void);
 };
 
 #endif

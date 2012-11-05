@@ -4,12 +4,9 @@
 #include "race.h"
 #include "armour.h"
 #include "weapon.h"
+#include "resistance.h"
 #include <list>
 
-//these are used to tell the item which slot it is in
-#define SLOT_ARMOUR 1
-#define SLOT_HAND_LEFT 2
-#define SLOT_HAND_RIGHT 3
 
 using namespace std;
 
@@ -25,11 +22,14 @@ class Character
 {
 private:
 	int hp, hpmax, mp, mpmax;
+	int AV;
+	Resistance resistance;
+	int armourSpecial;
 	char *name;
 	Gender gender;
 	Race *race;
 	//Class *cclass;
-	Armour *armour;
+	Armour *torso;
 	Hand *left, *right;
 	list<Item*> inventory;
 public:
@@ -40,7 +40,9 @@ public:
 	void listInventory(void);
 	void equip(Item *a, int slot);
 	void unequip(Item *a);
-	Armour* getArmour(void);
+	void calcDefence(void);
+	int getAV(void);
+	Armour* getTorso(void);
 	Hand* getLeftHand(void);
 	Hand* getRightHand(void);
 };

@@ -21,6 +21,14 @@ void Item::setSlot(int s)
 	slot = s;
 }
 
+bool Item::isAllowedInSlot(int _slot)
+{
+	for(list<int>::iterator it=allowed_slots.begin(); it != allowed_slots.end(); it++)
+		if((*it) == _slot)
+			return true;
+	return false;
+}
+
 const char* Item::getName(void)
 {
 	return name;
