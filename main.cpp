@@ -20,19 +20,20 @@ int main(int argc, char **argv)
 			Race("Goblin", 4, 4, 10, 4),
 			};
 	//player, TODO: ask them for name, class and race
-	Character pc = Character("Dan", &races[0]);
+	Character pc = Character("Dan", &races[0], MALE);
 
 	//a piece of armour
 	Armour *breastPlate = new Armour("Lazarus Suit", 5, 0x05000000, ARMOUR_SPECIAL_REGEN);
-	pc.equip(breastPlate);
+	pc.equip(breastPlate, SLOT_ARMOUR);
 
 	//a weapon
 	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
-	pc.equip(dagger, HAND_LEFT);
+	pc.equip(dagger, SLOT_HAND_RIGHT);
+	cout << "Dagger has been equipped in slot: " <<  dagger->getSlot() << endl;
 	pc.dumpStats(0);
 
-	cout << "\nUnequipping left hand\n" << endl;
-	pc.unequip(pc.getLeftHand());
+	cout << "\nUnequipping dagger\n" << endl;
+	pc.unequip(dagger);
 
 	pc.dumpStats(0);
 	return 0;

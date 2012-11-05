@@ -13,6 +13,7 @@ public:
 	virtual void dumpStats(void);
 	int getSlot(void);
 	void setSlot(int s);
+	const char* getName(void);
 };
 
 #endif

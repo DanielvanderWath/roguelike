@@ -5,12 +5,20 @@
 
 using namespace std;
 
+const char *possessive_pronoun[]={	"his",
+					"her",
+					"its",
+					"their",
+					};
+
 Character::Character(void){}
 Character::~Character(void){}
-Character::Character(const char *n, Race *r)
+Character::Character(const char *n, Race *r, Gender g)
 {
 	name = new char[strlen(n)+1];
 	strcpy(name, n);
+
+	gender = g;
 
 	race = r;
 	hpmax = race->hp();
@@ -35,21 +43,26 @@ void Character::dumpStats(int indent)
 	INDENTER(indent, indenter)
 	cout << indenter << "Name:\t" << name << "\n" << indenter << "Race:\t" << race->name() << "\n" << indenter << "HP:\t" << hpmax << "\n" << indenter << "MP:\t" << mpmax << "\n" << endl;
 
-	/*cout << "Armour:";
-	if(armour)
-		armour->dumpStats(indent);
-	else
-		cout << "\tNone" << endl;
-
-	cout <<"Right Hand:";
-	if(right)
-		right->dump*/
-
 	dump("Armour:", armour)
 	dump("Right Hand:", right)
 	dump("Left Hand:", left)
 
+	listInventory();
+
 	delete indenter;
+}
+
+void Character::listInventory(void)
+{
+	if(!inventory.empty())
+	{
+		cout << name << " has the following items in " << possessive_pronoun[gender] << " inventory:\n";
+
+		for(list<Item*>::iterator it=inventory.begin(); it != inventory.end(); it++)
+			cout << "\t" << (*it)->getName() << "\n";
+	}
+	else
+		cout << name << " has nothing in " << possessive_pronoun[gender] << " inventory.\n";
 }
 
 void Character::unequip(Item *a)
@@ -59,10 +72,10 @@ void Character::unequip(Item *a)
 		case SLOT_ARMOUR:
 			armour = NULL;		
 			break;
-		case SLOT_LEFT_HAND:
+		case SLOT_HAND_LEFT:
 			left = NULL;
 			break;
-		case SLOT_RIGHT_HAND:
+		case SLOT_HAND_RIGHT:
 			right = NULL;
 			break;
 		default:
@@ -72,22 +85,35 @@ void Character::unequip(Item *a)
 	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
 }
 
-void Character::equip(Armour *a)
+void Character::equip(Item *a, int slot)
 {
-	if(armour)
-		unequip(armour);
+	switch(slot)
+	{
+		case SLOT_ARMOUR:
+			if(armour)
+				unequip(armour);
 
-	armour = a;
-	a->setSlot(SLOT_ARMOUR);
-}
+			armour = (Armour*)a;
+			a->setSlot(SLOT_ARMOUR);
+			break;
+		case SLOT_HAND_LEFT:
+			if(left)
+				unequip(left);
 
-void Character::equip(Hand *a, HAND_WHICH hand)
-{
-	if(hand ? right : left )
-		unequip(hand ? right : left);
+			left = (Hand*)a;
+			a->setSlot(SLOT_HAND_LEFT);
+			break;
+		case SLOT_HAND_RIGHT:
+			if(right)
+				unequip(right);
 
-	hand ? right : left = a;
-	a->setSlot(hand ? SLOT_RIGHT_HAND : SLOT_LEFT_HAND);
+			right = (Hand*)a;
+			a->setSlot(SLOT_HAND_RIGHT);
+			break;
+		default:
+			cout << "Error: Trying to equip item in invalid slot" << endl;
+			return;
+	}
 }
 
 Armour* Character::getArmour(void)

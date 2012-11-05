@@ -8,16 +8,25 @@
 
 //these are used to tell the item which slot it is in
 #define SLOT_ARMOUR 1
-#define SLOT_LEFT_HAND 2
-#define SLOT_RIGHT_HAND 3
+#define SLOT_HAND_LEFT 2
+#define SLOT_HAND_RIGHT 3
 
 using namespace std;
+
+enum Gender
+{
+	MALE=0,
+	FEMALE,
+	IT,
+	THEM,
+};
 
 class Character
 {
 private:
 	int hp, hpmax, mp, mpmax;
 	char *name;
+	Gender gender;
 	Race *race;
 	//Class *cclass;
 	Armour *armour;
@@ -26,10 +35,10 @@ private:
 public:
 	Character(void);
 	~Character(void);
-	Character(const char *n, Race *r);
+	Character(const char *n, Race *r, Gender g);
 	void dumpStats(int indent);
-	void equip(Armour *a);
-	void equip(Hand *a, HAND_WHICH hand);
+	void listInventory(void);
+	void equip(Item *a, int slot);
 	void unequip(Item *a);
 	Armour* getArmour(void);
 	Hand* getLeftHand(void);

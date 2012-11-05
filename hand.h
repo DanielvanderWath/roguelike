@@ -3,11 +3,11 @@
 #include "item.h"
 
 enum HAND_WHICH{
-	HAND_LEFT,
+	HAND_LEFT=0,
 	HAND_RIGHT,
 	};
 
-class Hand : public virtual Item
+class Hand : public Item
 {
 private:
 public:
