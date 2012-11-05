@@ -3,6 +3,7 @@
 
 #include "race.h"
 #include "armour.h"
+#include "hand.h"
 #include "weapon.h"
 #include "character.h"
 

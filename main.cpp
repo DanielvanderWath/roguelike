@@ -27,11 +27,12 @@ int main(int argc, char **argv)
 	pc.equip(breastPlate);
 
 	//a weapon
-	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, true);
+	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
 	pc.equip(dagger, HAND_LEFT);
 	pc.dumpStats(0);
 
-	pc.unequip(pc->lefthand());
+	cout << "\nUnequipping left hand\n" << endl;
+	pc.unequip(pc.getLeftHand());
 
 	pc.dumpStats(0);
 	return 0;

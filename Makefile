@@ -2,13 +2,13 @@
 
 all: roguelike
 
-SRC = 	main.cpp \
+SRC = 	armour.cpp \
 	character.cpp \
 	race.cpp \
-	item.cpp \
 	weapon.cpp \
 	hand.cpp \
-	armour.cpp
+	item.cpp \
+	main.cpp
 
 LIB = 
 
