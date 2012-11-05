@@ -11,7 +11,7 @@ using namespace std;
 
 class Armour : public Item
 {
-private:
+protected:
 	int AV;//armour value
 	Resistance resistance;//packed resistances Fire8Ice8Lightning8Poison8. or something like that
 	int special;//bitfield containing special effects
