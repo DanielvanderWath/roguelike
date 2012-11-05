@@ -24,6 +24,11 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int 
 	icon = ')';
 }
 
+bool Weapon::isOneHanded(void)
+{
+	return onehanded;
+}
+
 void Weapon::dumpSpecials(int s, int indent)
 {
 	INDENTER(indent, indenter)

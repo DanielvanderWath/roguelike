@@ -83,6 +83,7 @@ void Character::unequip(Item *a)
 			return;
 	}
 	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
+	a->setSlot(0);//remove the reference to the equipment slot from the item
 }
 
 void Character::equip(Item *a, int slot)
@@ -97,6 +98,14 @@ void Character::equip(Item *a, int slot)
 			a->setSlot(SLOT_ARMOUR);
 			break;
 		case SLOT_HAND_LEFT:
+			//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
+			if(right && !((Weapon*)right)->isOneHanded())
+			{
+				OUTPUT("Attempting to equip item in offhand while wielding twohander");
+				return;
+			}
+				
+			//if there is already something in this hand then unequip it
 			if(left)
 				unequip(left);
 
@@ -104,6 +113,14 @@ void Character::equip(Item *a, int slot)
 			a->setSlot(SLOT_HAND_LEFT);
 			break;
 		case SLOT_HAND_RIGHT:
+			//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
+			if(left && !((Weapon*)left)->isOneHanded())
+			{
+				OUTPUT("Attempting to equip item in offhand while wielding twohander");
+				return;
+			}
+				
+			//if there is already something in this hand then unequip it
 			if(right)
 				unequip(right);
 

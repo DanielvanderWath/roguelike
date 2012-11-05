@@ -12,6 +12,8 @@
 			memset(Y, '\t', X); \
 			Y[X] = 0;//NULL terminate
 
+#define OUTPUT(X) cout << "\n---" << X << endl
+
 
 #endif
 

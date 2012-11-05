@@ -15,8 +15,8 @@ public:
 	~Weapon(void);
 	Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int s, bool one);
 	bool isOneHanded(void);
-	void dumpStats(int indent);
 	void dumpSpecials(int s, int indent);
+	void dumpStats(int indent);
 };
 #endif
 

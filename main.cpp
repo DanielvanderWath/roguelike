@@ -27,9 +27,14 @@ int main(int argc, char **argv)
 	pc.equip(breastPlate, SLOT_ARMOUR);
 
 	//a weapon
+	Weapon *sledge = new Weapon("Massive sledgehammer", 8, 6, 2, 4, 0, false);
+	pc.equip(sledge, SLOT_HAND_LEFT);
+
+	//and another
 	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
 	pc.equip(dagger, SLOT_HAND_RIGHT);
 	cout << "Dagger has been equipped in slot: " <<  dagger->getSlot() << endl;
+	
 	pc.dumpStats(0);
 
 	cout << "\nUnequipping dagger\n" << endl;
