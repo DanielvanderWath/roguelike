@@ -1,9 +1,10 @@
 #include "shield.h"
+#include <string.h>
 
 Shield::Shield(void){}
 Shield::~Shield(void){}
 
-Shield::Shield(const char *n, int av, Resistance _resistance, int special, int bash_force)
+Shield::Shield(const char *n, int av, Resistance _resistance, int _special, int bash_force)
 {
 	//TODO: error check
 	name = new char[strlen(n)+1];

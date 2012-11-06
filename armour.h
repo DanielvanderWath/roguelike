@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Armour : public Item
+class Armour : virtual public Item
 {
 protected:
 	int AV;//armour value

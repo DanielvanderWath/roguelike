@@ -9,7 +9,7 @@ class Shield : public Hand, public Armour
 public:
 	Shield(void);
 	~Shield(void);
-	Shield(const char *n, int av, Resistance _resistance, int special, int bash_force);
+	Shield(const char *n, int av, Resistance _resistance, int _special, int bash_force);
 };
 
 #endif

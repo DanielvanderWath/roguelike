@@ -97,7 +97,7 @@ void Character::equip(Item *a, int slot)
 				if(torso)
 					unequip(torso);
 
-				torso = (Armour*)a;
+				torso = dynamic_cast<Armour*>(a);
 				a->setSlot(SLOT_TORSO);
 				break;
 			case SLOT_HAND_LEFT:
@@ -113,11 +113,11 @@ void Character::equip(Item *a, int slot)
 					unequip(left);
 
 				//if this is a twohander then unequip the item in the offhand
-				if(!((Hand*)a)->isOneHanded() && right)
+				if(!dynamic_cast<Hand*>(a)->isOneHanded() && right)
 					unequip(right);
 
-				left = (Hand*)a;
-				a->setSlot(SLOT_HAND_LEFT);
+				left = dynamic_cast<Hand*>(a);
+				((Item*)a)->setSlot(SLOT_HAND_LEFT);
 				break;
 			case SLOT_HAND_RIGHT:
 				//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
@@ -132,11 +132,11 @@ void Character::equip(Item *a, int slot)
 					unequip(right);
 
 				//if this is a twohander then unequip the item in the offhand
-				if(!((Hand*)a)->isOneHanded() && left)
+				if(!dynamic_cast<Hand*>(a)->isOneHanded() && left)
 					unequip(left);
 
-				right = (Hand*)a;
-				a->setSlot(SLOT_HAND_RIGHT);
+				right = dynamic_cast<Hand*>(a);
+				((Item*)a)->setSlot(SLOT_HAND_RIGHT);
 				break;
 			default:
 				cout << "Error: Trying to equip item in invalid slot" << endl;

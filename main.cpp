@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	Character pc = Character("Dan", &races[0], MALE);
 
 	//a piece of armour
-	Armour *breastPlate = new Armour("Lazarus Suit", 5, Resistance(5, 0, 0, 0), ARMOUR_SPECIAL_REGEN, list<int>(1, SLOT_TORSO));
+	Armour *breastPlate = new Armour("Lazarus Suit", 5, Resistance(5, 0, 0, 0), ARMOUR_SPECIAL_REGEN, list<int>(3, SLOT_TORSO));
 	pc.equip(breastPlate, SLOT_TORSO);
 
 	//a weapon

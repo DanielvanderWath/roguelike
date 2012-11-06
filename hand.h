@@ -7,7 +7,7 @@ enum HAND_WHICH{
 	HAND_RIGHT,
 	};
 
-class Hand : public Item
+class Hand : virtual public Item
 {
 protected:
 	bool onehanded;

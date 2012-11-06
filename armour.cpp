@@ -18,7 +18,7 @@ Armour::Armour(const char *n, int av, Resistance _resistance, int _special, list
 	special = _special;
 	icon = '[';
 
-	allowed_slots = list<int> (_allowed_slots);
+//	allowed_slots = _allowed_slots;
 }
 
 void Armour::dumpResistances(Resistance r, int indent)
