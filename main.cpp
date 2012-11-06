@@ -13,6 +13,10 @@ void init(void)
 int main(int argc, char **argv)
 {
 	init();
+
+	//this list will serve as the inventory of a floor tile. Later each floor tile will have its own.
+	list<Item*> theFloor;
+
 	//TODO: load this from a file later
 	//int num_races = 3;
 	Race races[]={	Race("Human", 8, 4, 8, 4),
@@ -31,7 +35,7 @@ int main(int argc, char **argv)
 	pc.equip(sledge, SLOT_HAND_LEFT);
 
 	//and another
-	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
+	/*Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
 	pc.equip(dagger, SLOT_HAND_RIGHT);
 	pc.dumpStats(0);
 	pc.unequip(sledge);
@@ -41,14 +45,21 @@ int main(int argc, char **argv)
 	//add a shield
 	Shield *aspis = new Shield("Bronze Aspis", 3, 2, NULL, 0, 5);
 	pc.equip(aspis, SLOT_HAND_LEFT);
-
+	*/
 	pc.dumpStats(0);
 
 	//spawn a goblin
 	Character *goblin = new Character("Grizott", &races[2], FEMALE);
-	goblin->dumpStats(0);
+	goblin->setXPValue((rand() % 20) + 20);
 	pc.attackBasic(goblin);
-	goblin->dumpStats(0);
+
+	//see if the goblin died, if so reward the pc
+	if(goblin->isDead())
+	{
+		pc.addXP(goblin->getXPValue());
+		goblin->giveInventory(&theFloor);
+		delete goblin;
+	}
 
 	return 0;
 }

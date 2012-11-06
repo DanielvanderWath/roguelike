@@ -26,6 +26,8 @@ Character::Character(const char *n, Race *r, Gender g)
 	hp = hpmax;
 	mpmax = race->mp();
 	mp = mpmax;
+	xp = 0;
+	xpValue = 0;
 
 	/*cclass = NULL;*/
 	torso =NULL;	
@@ -48,6 +50,7 @@ void Character::dumpStats(int indent)
 		<< indenter << "HP:\t" << hp << "/" << hpmax << "\n" 
 		<< "AV:\t" << AV  << "\n" 
 		<< indenter << "MP:\t" << mpmax << "\n" 
+		<< indenter << "XP:\t" << xp << "\n" 
 		<< endl;
 
 	dump("Torso:", torso)
@@ -74,6 +77,12 @@ void Character::listInventory(void)
 
 void Character::unequip(Item *a)
 {
+	if(!a)
+	{
+		//there is no item in this slot
+		return;
+	}
+
 	switch(a->getSlot())
 	{
 		case SLOT_TORSO:
@@ -93,6 +102,20 @@ void Character::unequip(Item *a)
 	a->setSlot(0);//remove the reference to the equipment slot from the item
 	calcDefence();//recalculate defensive stats after unequipping an item
 	OUTPUT( name << " unequipped " << a->getName());
+}
+
+void Character::giveInventory(list<Item*> *target)
+{
+	//unequip everything
+	unequip(torso);
+	unequip(left);
+	unequip(right);
+
+	for(list<Item*>::iterator it = inventory.begin(); it != inventory.end(); it++)
+	{
+		target->push_back(*it);
+		inventory.pop_front();
+	}
 }
 
 void Character::equip(Item *a, int slot)
@@ -147,7 +170,7 @@ void Character::equip(Item *a, int slot)
 				((Item*)a)->setSlot(SLOT_HAND_RIGHT);
 				break;
 			default:
-				cout << "Error: Trying to equip item in invalid slot" << endl;
+				OUTPUT( "Error: Trying to equip item in invalid slot");
 				return;
 		}
 		//recalculate defensive stats after equipping an item
@@ -201,8 +224,8 @@ bool Character::attackBasic(Character *target)
 	if(!bDual)
 	{
 		//attacking with one weapon. TODO: accuracy and dodge
+		OUTPUT( name << " attacks " << target->getName() << " with " << possessive_pronoun[gender] << " " << (bRight ? right : left)->getName());
 		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false);
-		
 	}
 	else if(!bNoWeapon)
 	{
@@ -235,7 +258,7 @@ bool Character::hitPhysical(int damage)
 	{
 		//blocked, no damage! there might still be effects though. TODO: report this
 		damage10 = 0;
-		cout << name << " blocked the attack and recieved no damage" << endl;
+		OUTPUT( name << " blocked the attack and recieved no damage" );
 	}
 	else if( roll < chanceBlock + chanceCrit )
 	{
@@ -243,14 +266,14 @@ bool Character::hitPhysical(int damage)
 		crit = true;
 		//TODO: how massive should the damage be? double for now
 		damage10 *=2;
-		cout << name << " was hit critically and recieved "  << damage10/10 << " damage" << endl;
+		OUTPUT( name << " was hit critically and recieved "  << damage10/10 << " damage" );
 	}
 	else
 	{
 		//armour reduces the damage (by no more than 90%)
 		//here, if damage is AV*2 there is no reduction
 		damage10 = CLAMP(damage, 3*damage10/2 - AV10, damage10);
-		cout << name << " recieved "  << damage10/10 << " damage" << endl;
+		OUTPUT( name << " recieved "  << damage10/10 << " damage" );
 	}
 
 	damage = damage10/10;
@@ -261,9 +284,37 @@ bool Character::hitPhysical(int damage)
 	return crit;
 }
 
+const char* Character::getName(void)
+{
+	return (const char*) name;
+}
+
 int Character::getAV(void)
 {
 	return AV;
+}
+
+int Character::getXP(void)
+{
+	return xp;
+}
+
+void Character::addXP(int _xp)
+{
+	xp += _xp;
+	OUTPUT(name << " gained " << _xp << " XP!" );
+	//TODO: level up
+}
+
+int Character::getXPValue(void)
+{
+	return xpValue;
+}
+
+void Character::setXPValue(int _xp)
+{
+	//use this for setting the XP value for NPCs
+	xpValue = _xp;
 }
 
 Armour* Character::getTorso(void)
@@ -279,5 +330,16 @@ Hand* Character::getLeftHand(void)
 Hand* Character::getRightHand(void)
 {
 	return right;
+}
+
+bool Character::isDead(void)
+{
+	if(hp < 1)
+	{
+		//this character has just been killed
+		OUTPUT( name << " is Dead" );
+		return true;
+	}
+	return false;
 }
 
