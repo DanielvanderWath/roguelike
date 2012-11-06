@@ -5,6 +5,7 @@
 #include "armour.h"
 #include "weapon.h"
 #include "resistance.h"
+#include "buff.h"
 #include <list>
 
 
@@ -33,6 +34,7 @@ private:
 	Armour *torso;
 	Hand *left, *right;
 	list<Item*> inventory;
+	list<Buff*> buffs;
 public:
 	Character(void);
 	~Character(void);
@@ -45,6 +47,8 @@ public:
 	void calcDefence(void);
 	bool attackBasic(Character *target);
 	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else
+	void addBuff(Buff *b);
+	void removeAllBuffs(void);
 	const char* getName(void);
 	int getAV(void);
 	int getXP(void);

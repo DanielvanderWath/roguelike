@@ -12,8 +12,27 @@ const char *possessive_pronoun[]={	"his",
 					"their",
 					};
 
+const char *personal_pronoun[]={	"he",
+					"she",
+					"it",
+					"they",
+				};
+
 Character::Character(void){}
-Character::~Character(void){}
+Character::~Character(void)
+{
+	//inventory should have already been dropped
+	if(!inventory.empty())
+		OUTPUT("ERROR: " << name << "'s inventory was not dropped before " << personal_pronoun[gender] << " was deleted");
+
+	if(!buffs.empty())
+	{
+		removeAllBuffs();
+	}
+
+	delete name;
+}
+
 Character::Character(const char *n, Race *r, Gender g)
 {
 	name = new char[strlen(n)+1];
@@ -282,6 +301,20 @@ bool Character::hitPhysical(int damage)
 	hp -= damage;
 
 	return crit;
+}
+
+void Character::addBuff(Buff *b)
+{
+	buffs.push_back(b);
+	OUTPUT( name << " is now under the effect of " << b->getName() );
+}
+
+void Character::removeAllBuffs(void)
+{
+	while(!buffs.empty())
+	{
+		buffs.pop_front();
+	}
 }
 
 const char* Character::getName(void)

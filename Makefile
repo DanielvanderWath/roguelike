@@ -10,6 +10,7 @@ SRC = 	armour.cpp \
 	item.cpp \
 	resistance.cpp \
 	shield.cpp \
+	buff.cpp \
 	main.cpp
 
 LIB = 
