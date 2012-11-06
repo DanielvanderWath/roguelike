@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <string.h>
 #include "character.h"
 #include "game.h"
@@ -42,7 +43,12 @@ void Character::dumpStats(int indent)
 {
 	INDENTER(indent, indenter)
 	indent++;
-	cout << indenter << "Name:\t" << name << "\n" << indenter << "Race:\t" << race->name() << "\n" << indenter << "HP:\t" << hpmax << "\n" << "AV:\t" << AV  << "\n" << indenter << "MP:\t" << mpmax << "\n" << endl;
+	cout 	<< indenter << "Name:\t" << name << "\n" 
+		<< indenter << "Race:\t" << race->name() << "\n" 
+		<< indenter << "HP:\t" << hp << "/" << hpmax << "\n" 
+		<< "AV:\t" << AV  << "\n" 
+		<< indenter << "MP:\t" << mpmax << "\n" 
+		<< endl;
 
 	dump("Torso:", torso)
 	dump("Right Hand:", right)
@@ -167,6 +173,95 @@ void Character::calcDefence(void)
 		resistance.add(torso->getResistance());
 
 	}
+}
+
+bool Character::attackBasic(Character *target)
+{
+	bool bDual = false, bRight = false, bNoWeapon = false, bCrit = false;
+	
+	//first work out if this is going to be one handed (and if so which hand) or dual handed
+	if (right && right->isWeapon())
+	{
+		bRight = true;
+		if (left && left->isWeapon()) 
+			bDual == true;
+	}
+	else if (left && left->isWeapon()) 
+	{
+		bRight = false;
+	}
+	else
+	{
+		//not holding a weapon in either hand
+		bNoWeapon = true;
+	}
+
+	if(!bDual)
+	{
+		//attacking with one weapon. TODO: accuracy and dodge
+		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false);
+		
+	}
+	else if(!bNoWeapon)
+	{
+		//attacking with both weapons. first decide which is the main hand. TODO: should the character have a preference, or should we go off heaviest/largest/most powerful? Assume right handed for the time being
+		bCrit = dynamic_cast<Weapon*>(right)->attack(target, false);
+		if(!bCrit)
+			bCrit = dynamic_cast<Weapon*>(left)->attack(target, true);
+	}
+	else
+	{
+		//TODO: decide what to do when attacking without a weapon
+	}
+
+	//tell the caller if we scored a critical hit
+	return bCrit;
+}
+
+bool Character::hitPhysical(int damage)
+{
+	bool crit = false;
+	int chanceBlock = 250, chanceCrit = 25, roll = (rand() % 1001);
+	int AV10 = AV * 10, damage10 = damage * 10;
+
+
+	//if the damage is equal to our AV, we want about a 25% chance (clamped between 1% and 50%) of the blow being blocked completely, and a 2.5% chance of critting (TODO: make crit chance weightable by weapon)
+	chanceBlock += AV10 - damage10;
+	chanceBlock = CLAMP( 10, chanceBlock, 500);
+
+	if(roll < chanceBlock)
+	{
+		//blocked, no damage! there might still be effects though. TODO: report this
+		damage10 = 0;
+		cout << name << " blocked the attack and recieved no damage" << endl;
+	}
+	else if( roll < chanceBlock + chanceCrit )
+	{
+		//critical hit! 
+		crit = true;
+		//TODO: how massive should the damage be? double for now
+		damage10 *=2;
+		cout << name << " was hit critically and recieved "  << damage10/10 << " damage" << endl;
+	}
+	else
+	{
+		//armour reduces the damage (by no more than 90%)
+		//here, if damage is AV*2 there is no reduction
+		damage10 = CLAMP(damage, 3*damage10/2 - AV10, damage10);
+		cout << name << " recieved "  << damage10/10 << " damage" << endl;
+	}
+
+	damage = damage10/10;
+
+	//apply the damage done
+	hp -= damage;
+
+	return crit;
+}
+
+int Character::getAV(void)
+{
+	return AV;
 }
 
 Armour* Character::getTorso(void)

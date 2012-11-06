@@ -41,6 +41,8 @@ public:
 	void equip(Item *a, int slot);
 	void unequip(Item *a);
 	void calcDefence(void);
+	bool attackBasic(Character *target);
+	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else
 	int getAV(void);
 	Armour* getTorso(void);
 	Hand* getLeftHand(void);

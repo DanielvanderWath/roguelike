@@ -16,6 +16,11 @@ bool Hand::isShield(void)
 	return shield;
 }
 
+bool Hand::isWeapon(void)
+{
+	return weapon;
+}
+
 void Hand::dumpStats(int indent)
 {
 	cout << "This shouldn't have been called: " << __func__ << ":" << __LINE__ << endl;

@@ -3,6 +3,8 @@
 #include "hand.h"
 #include "game.h"
 
+class Character;
+
 #define WEAPON_SPECIAL_POISON 1 << 0
 class Weapon : public Hand
 {
@@ -15,6 +17,7 @@ public:
 	Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int s, bool one);
 	void dumpSpecials(int s, int indent);
 	void dumpStats(int indent);
+	bool attack(Character *target, bool offHand);
 };
 #endif
 

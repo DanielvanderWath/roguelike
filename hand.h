@@ -12,12 +12,14 @@ class Hand : virtual public Item
 protected:
 	bool onehanded;
 	bool shield;
+	bool weapon;
 public:
 	Hand(void);
 	virtual ~Hand(void);
 	virtual void dumpStats(int indent);
 	bool isOneHanded(void);
 	bool isShield(void);
+	bool isWeapon(void);
 };
 
 #endif

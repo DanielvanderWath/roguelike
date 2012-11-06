@@ -41,8 +41,14 @@ int main(int argc, char **argv)
 	//add a shield
 	Shield *aspis = new Shield("Bronze Aspis", 3, 2, NULL, 0, 5);
 	pc.equip(aspis, SLOT_HAND_LEFT);
-	pc.unequip(dagger);
 
 	pc.dumpStats(0);
+
+	//spawn a goblin
+	Character *goblin = new Character("Grizott", &races[2], FEMALE);
+	goblin->dumpStats(0);
+	pc.attackBasic(goblin);
+	goblin->dumpStats(0);
+
 	return 0;
 }

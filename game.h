@@ -15,6 +15,7 @@
 
 #define OUTPUT(X) cout << "\n---" << X << endl
 
+#define CLAMP(low, X, high) (low > X ? low : high < X ? high : X)
 
 #endif
 
