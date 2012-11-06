@@ -3,7 +3,7 @@
 Resistance::Resistance(void){fire=0; ice=0; lightning=0;poison=0;}
 Resistance::~Resistance(void){}
 
-Resistance::Resistance(const Resistance &r)
+Resistance::Resistance(const Resistance *r)
 {
 	zero();
 	add((Resistance*)&r);

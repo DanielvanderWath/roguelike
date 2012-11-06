@@ -23,10 +23,6 @@ void Item::setSlot(int s)
 
 bool Item::isAllowedInSlot(int _slot)
 {
-	if(allowed_slots.empty())
-		cout << "allowed_slots is empty" << endl;
-	else
-		cout << "allowed_slots is " << allowed_slots.size() << " elements long" << endl;
 	for(list<int>::iterator it=allowed_slots.begin(); it != allowed_slots.end(); it++)
 		if((int)*it == _slot)
 			return true;

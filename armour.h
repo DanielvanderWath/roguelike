@@ -18,7 +18,7 @@ protected:
 public:
 	Armour(void);
 	~Armour(void);
-	Armour(const char *n, int av, Resistance _resistance, int _special, list<int> _allowed_slots);
+	Armour(const char *n, int av_min, int av_var,  Resistance _resistance, int _special, list<int> _allowed_slots);
 	void dumpResistances(Resistance r, int indent);
 	void dumpSpecials(int s, int indent);
 	void dumpStats(int indent);

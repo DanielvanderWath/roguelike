@@ -41,7 +41,8 @@ Character::Character(const char *n, Race *r, Gender g)
 void Character::dumpStats(int indent)
 {
 	INDENTER(indent, indenter)
-	cout << indenter << "Name:\t" << name << "\n" << indenter << "Race:\t" << race->name() << "\n" << indenter << "HP:\t" << hpmax << "\n" << indenter << "MP:\t" << mpmax << "\n" << endl;
+	indent++;
+	cout << indenter << "Name:\t" << name << "\n" << indenter << "Race:\t" << race->name() << "\n" << indenter << "HP:\t" << hpmax << "\n" << "AV:\t" << AV  << "\n" << indenter << "MP:\t" << mpmax << "\n" << endl;
 
 	dump("Torso:", torso)
 	dump("Right Hand:", right)
@@ -84,7 +85,8 @@ void Character::unequip(Item *a)
 	}
 	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
 	a->setSlot(0);//remove the reference to the equipment slot from the item
-	OUTPUT( "Unequipping " << a->getName());
+	calcDefence();//recalculate defensive stats after unequipping an item
+	OUTPUT( name << " unequipped " << a->getName());
 }
 
 void Character::equip(Item *a, int slot)
@@ -142,6 +144,8 @@ void Character::equip(Item *a, int slot)
 				cout << "Error: Trying to equip item in invalid slot" << endl;
 				return;
 		}
+		//recalculate defensive stats after equipping an item
+		calcDefence();
 	}
 }
 

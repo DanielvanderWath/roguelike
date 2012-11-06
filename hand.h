@@ -15,7 +15,7 @@ protected:
 public:
 	Hand(void);
 	virtual ~Hand(void);
-	virtual void dumpStats(int indent)=0;
+	virtual void dumpStats(int indent);
 	bool isOneHanded(void);
 	bool isShield(void);
 };

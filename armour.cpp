@@ -2,23 +2,24 @@
 #include "armour.h"
 #include <iostream>
 #include <string.h>
+#include <cstdlib>
 
 using namespace std;
 
 Armour::Armour(void){}
 Armour::~Armour(void){}
-Armour::Armour(const char *n, int av, Resistance _resistance, int _special, list<int> _allowed_slots)
+Armour::Armour(const char *n, int av_min, int av_var, Resistance _resistance, int _special, list<int> _allowed_slots)
 {
 	//TODO: error check
 	name = new char[strlen(n)+1];
 	strcpy(name, n);
 
-	AV = av;
+	AV = av_min + (rand() % ++av_var);
 	resistance = Resistance(_resistance);
 	special = _special;
 	icon = '[';
 
-//	allowed_slots = _allowed_slots;
+	allowed_slots = _allowed_slots;
 }
 
 void Armour::dumpResistances(Resistance r, int indent)
@@ -49,7 +50,8 @@ void Armour::dumpSpecials(int s, int indent)
 
 void Armour::dumpStats(int indent)
 {
-	INDENTER(indent++, indenter)
+	INDENTER(indent, indenter)
+	++indent;
 	cout << indenter << "Name:\t" << name << "\n" << indenter << "Icon:\t" << icon << "\n" << indenter << "AV:\t" << AV ;
 
 	cout << "\n" << indenter << "Resistances:\n";

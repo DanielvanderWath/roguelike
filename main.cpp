@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	Character pc = Character("Dan", &races[0], MALE);
 
 	//a piece of armour
-	Armour *breastPlate = new Armour("Lazarus Suit", 5, Resistance(5, 0, 0, 0), ARMOUR_SPECIAL_REGEN, list<int>(3, SLOT_TORSO));
+	Armour *breastPlate = new Armour("Lazarus Suit", 4, 3, Resistance(5, 0, 0, 0), ARMOUR_SPECIAL_REGEN, list<int>(3, SLOT_TORSO));
 	pc.equip(breastPlate, SLOT_TORSO);
 
 	//a weapon
@@ -36,9 +36,11 @@ int main(int argc, char **argv)
 	pc.dumpStats(0);
 	pc.unequip(sledge);
 	pc.equip(dagger, SLOT_HAND_RIGHT);
-
 	pc.dumpStats(0);
 
+	//add a shield
+	Shield *aspis = new Shield("Bronze Aspis", 3, 2, NULL, 0, 5);
+	pc.equip(aspis, SLOT_HAND_LEFT);
 	pc.unequip(dagger);
 
 	pc.dumpStats(0);

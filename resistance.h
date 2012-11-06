@@ -8,7 +8,7 @@ protected:
 public:
 	Resistance(void);
 	~Resistance(void);
-	Resistance(const Resistance &r);
+	Resistance(const Resistance *r);
 	Resistance(int _fire, int _ice, int _lightning, int _poison);
 	int getFire(void);
 	int getIce(void);
