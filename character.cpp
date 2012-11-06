@@ -157,21 +157,23 @@ void Character::equip(Item *a, int slot)
 
 void Character::calcDefence(void)
 {
-	//store the sum of all armours' AVs in AV
+	//store the sum of all armours' AVs and resistances in AV
 	AV = 0;
-	if(torso)
-		AV += torso->getAV();
-	if(left && left->isShield())
-		AV += ((Armour*)left)->getAV();//TODO: change these Armours to Shields
-	if(right && right->isShield())
-		AV += ((Armour*)right)->getAV();
-
-	//and the resistances in resistance
 	resistance.zero();
 	if(torso)
 	{
+		AV += torso->getAV();
 		resistance.add(torso->getResistance());
-
+	}
+	if(left && left->isShield())
+	{
+		AV += dynamic_cast<Shield*>(left)->getAV();
+		resistance.add(dynamic_cast<Shield*>(left)->getResistance());
+	}
+	if(right && right->isShield())
+	{
+		AV += dynamic_cast<Shield*>(right)->getAV();
+		resistance.add(dynamic_cast<Shield*>(right)->getResistance());
 	}
 }
 

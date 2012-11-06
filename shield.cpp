@@ -19,6 +19,7 @@ Shield::Shield(const char *n, int av_min, int av_var, Resistance *_resistance, i
 
 	special = _special;
 	icon = '[';
+	shield = true;
 
 	allowed_slots.push_back(SLOT_HAND_LEFT);
 	allowed_slots.push_back(SLOT_HAND_RIGHT);
