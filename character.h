@@ -8,6 +8,9 @@
 #include "buff.h"
 #include <list>
 
+class Armour;
+class Item;
+class Buff;
 
 using namespace std;
 
@@ -48,6 +51,9 @@ public:
 	bool attackBasic(Character *target);
 	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else
 	void addBuff(Buff *b);
+	void addMP(int m);
+	void addHP(int h);
+	void tickBuffs(void);
 	void removeAllBuffs(void);
 	const char* getName(void);
 	int getAV(void);

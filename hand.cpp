@@ -6,6 +6,11 @@ using namespace std;
 Hand::Hand(void){ onehanded=true; shield=false;}
 Hand::~Hand(void){}
 
+void Hand::setWielder(Character *w)
+{
+	wielder = w;
+}
+
 bool Hand::isOneHanded(void)
 {
 	return onehanded;

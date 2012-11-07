@@ -61,11 +61,15 @@ int main(int argc, char **argv)
 	pc->equip(breastPlate, SLOT_TORSO);
 
 	//a weapon
-	Weapon *sledge = new Weapon("Massive sledgehammer", 8, 6, 2, 4, 0, false);
+	Weapon *sledge = new Weapon("Massive sledgehammer", 8, 6, 2, 4, false);
 	pc->equip(sledge, SLOT_HAND_LEFT);
 
 	//and another
-	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, WEAPON_SPECIAL_POISON, true);
+	Weapon *dagger = new Weapon("Assassin's blade", 3, 2, 2, 2, true);
+	{
+		Effect *tmp = new Effect("Syphilis", WEAPON_EFFECT_POISON, 5, 4);
+		dagger->addEffect(tmp);
+	}
 	pc->equip(dagger, SLOT_HAND_RIGHT);
 	pc->dumpStats(0);
 	pc->unequip(sledge);
@@ -83,7 +87,7 @@ int main(int argc, char **argv)
 	goblin->setXPValue((rand() % 20) + 20);
 
 	//give the goblin a weapon
-	Weapon *stick = new Weapon("Pointy stick", 2, 2, 2, 2, 0, true);
+	Weapon *stick = new Weapon("Pointy stick", 2, 2, 2, 2, true);
 	goblin->equip(stick, SLOT_HAND_RIGHT);
 
 
@@ -98,9 +102,12 @@ int main(int argc, char **argv)
 			bOver = true;
 		}
 
+		(bPlayerTurn ? pc : goblin)->tickBuffs();
+
 		usleep(500000);
 
 		bPlayerTurn = !bPlayerTurn;
+
 	}
 
 	//see if the goblin died, if so reward the pc

@@ -1,6 +1,8 @@
 #ifndef __BUFF_H__
 #define __BUFF_H__
 
+class Character;
+
 class Buff
 {
 private:
@@ -12,7 +14,7 @@ public:
 	Buff();
 	~Buff();
 	Buff(const char* _n, int _timeLeft);
-	bool tick(void);
+	bool tick(Character* target);
 	const char *getName(void);
 	void setHPPerTurn(int hp);
 	void setMPPerTurn(int mp);

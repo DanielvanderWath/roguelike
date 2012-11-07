@@ -8,7 +8,7 @@ using namespace std;
 Weapon::Weapon(void){name = NULL;}
 Weapon::~Weapon(void){if(name) delete name;}
 
-Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int s, bool one)
+Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, bool one)
 {
 	//TODO: error check
 	name = new char[strlen(n)+1];
@@ -16,8 +16,6 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int 
 
 	damage_min = dmin + (rand() % dminvar);
 	damage_var = dvar + (rand() % dvarvar);
-
-	special = s;
 
 	onehanded = one;
 	weapon = true;
@@ -29,17 +27,12 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int 
 	allowed_slots.push_back(SLOT_HAND_RIGHT);
 }
 
-void Weapon::setWielder(Character *w)
-{
-	wielder = w;
-}
-
 void Weapon::dumpSpecials(int s, int indent)
 {
 	INDENTER(indent, indenter)
 
 	cout << indenter << "Specials:";
-	if( WEAPON_SPECIAL_POISON & s )
+	if( WEAPON_EFFECT_POISON & s )
 		cout << "\n" << indenter << "Poison";
 
 	cout << endl;
@@ -54,7 +47,7 @@ void Weapon::dumpStats(int indent)
 
 	cout << indenter << "Name:\t" << name << "\n" << indenter << "Icon:\t" << icon << "\n" << indenter << "Damage:\t" << damage_min << "-" << damage_min + damage_var << "\n";
 
-	dumpSpecials(special, indent);
+	//dumpSpecials(special, indent);
 
 }
 

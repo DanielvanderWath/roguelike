@@ -108,11 +108,11 @@ void Character::unequip(Item *a)
 			torso = NULL;		
 			break;
 		case SLOT_HAND_LEFT:
-			left->setWielder(NULL);
+			dynamic_cast<Weapon*>(left)->setWielder(NULL);
 			left = NULL;
 			break;
 		case SLOT_HAND_RIGHT:
-			right->setWielder(NULL);
+			dynamic_cast<Weapon*>(right)->setWielder(NULL);
 			right = NULL;
 			break;
 		default:
@@ -170,7 +170,8 @@ void Character::equip(Item *a, int slot)
 
 				left = dynamic_cast<Hand*>(a);
 				((Item*)a)->setSlot(SLOT_HAND_LEFT);
-				((Item*)a)->setWielder(this);
+
+				dynamic_cast<Hand*>(a)->setWielder(this);
 				break;
 			case SLOT_HAND_RIGHT:
 				//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
@@ -190,7 +191,7 @@ void Character::equip(Item *a, int slot)
 
 				right = dynamic_cast<Hand*>(a);
 				((Item*)a)->setSlot(SLOT_HAND_RIGHT);
-				((Item*)a)->setWielder(this);
+				dynamic_cast<Hand*>(a)->setWielder(this);
 				break;
 			default:
 				OUTPUT( "Error: Trying to equip item in invalid slot");
@@ -311,6 +312,39 @@ void Character::addBuff(Buff *b)
 {
 	buffs.push_back(b);
 	OUTPUT( name << " is now under the effect of " << b->getName() );
+}
+
+void Character::addMP(int m)
+{
+	mp += m;
+	if(mp > mpmax)
+		mp = mpmax;
+}
+
+void Character::addHP(int h)
+{
+	hp += h;
+	if(hp > hpmax)
+		hp = hpmax;
+}
+
+void Character::tickBuffs(void)
+{
+	if(!buffs.empty())
+	{
+		OUTPUT ( name << " has " << buffs.size() << " active effects" );
+		for(list<Buff*>::iterator it = buffs.begin(); it != buffs.end(); it++)
+		{
+			if((*it)->tick(this))
+			{
+				OUTPUT( name << "'s "  << (*it)->getName() << " has worn off" );
+				delete (*it);
+				buffs.erase(it);
+				if( it != buffs.begin())
+					it--;
+			}
+		}
+	}
 }
 
 void Character::removeAllBuffs(void)
