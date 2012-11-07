@@ -108,9 +108,11 @@ void Character::unequip(Item *a)
 			torso = NULL;		
 			break;
 		case SLOT_HAND_LEFT:
+			left->setWielder(NULL);
 			left = NULL;
 			break;
 		case SLOT_HAND_RIGHT:
+			right->setWielder(NULL);
 			right = NULL;
 			break;
 		default:
@@ -168,6 +170,7 @@ void Character::equip(Item *a, int slot)
 
 				left = dynamic_cast<Hand*>(a);
 				((Item*)a)->setSlot(SLOT_HAND_LEFT);
+				((Item*)a)->setWielder(this);
 				break;
 			case SLOT_HAND_RIGHT:
 				//if there is a two handed weapon in the other hand then refuse to equip anything in this hand
@@ -187,6 +190,7 @@ void Character::equip(Item *a, int slot)
 
 				right = dynamic_cast<Hand*>(a);
 				((Item*)a)->setSlot(SLOT_HAND_RIGHT);
+				((Item*)a)->setWielder(this);
 				break;
 			default:
 				OUTPUT( "Error: Trying to equip item in invalid slot");

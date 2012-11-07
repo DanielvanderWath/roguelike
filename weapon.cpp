@@ -29,6 +29,11 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, int 
 	allowed_slots.push_back(SLOT_HAND_RIGHT);
 }
 
+void Weapon::setWielder(Character *w)
+{
+	wielder = w;
+}
+
 void Weapon::dumpSpecials(int s, int indent)
 {
 	INDENTER(indent, indenter)
@@ -65,6 +70,17 @@ bool Weapon::attack(Character *target, bool offHand)
 	//return true on critical hit so the character can trigger any procs
 	bool crit = target->hitPhysical(baseDamage);
 
+	for(list<Effect*>::iterator it = effects.begin(); it != effects.end(); it++)
+	{
+		(*it)->callEffectFunc(wielder, target, crit);
+	}
+
 	return crit;
 }
+
+void Weapon::addEffect(Effect *effect)
+{
+	effects.push_back(effect);
+}
+
 

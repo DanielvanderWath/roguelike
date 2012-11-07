@@ -7,7 +7,7 @@ private:
 	char *name;
 	int hpPerTurn, mpPerTurn;
 	int AV, damage;
-	int timeLeft;
+	int timeLeft;//if timeleft is < 0 then it is a constant effect caused by an equipped items
 public:
 	Buff();
 	~Buff();

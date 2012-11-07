@@ -11,6 +11,11 @@ void Item::dumpStats(void)
 	cout << "Name:\t" << name << "\nIcon:\t" << icon << endl;
 }
 
+void Item::addBuff(Buff *_buff)
+{
+	buffs.push_back(_buff);
+}
+
 int Item::getSlot(void)
 {
 	return slot;

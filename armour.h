@@ -14,17 +14,16 @@ class Armour : virtual public Item
 protected:
 	int AV;//armour value
 	Resistance resistance;//packed resistances Fire8Ice8Lightning8Poison8. or something like that
-	int special;//bitfield containing special effects
 public:
 	Armour(void);
 	~Armour(void);
-	Armour(const char *n, int av_min, int av_var,  Resistance _resistance, int _special, list<int> _allowed_slots);
+	Armour(const char *n, int av_min, int av_var,  Resistance *_resistance, list<Buff*> *_buffs, list<int> _allowed_slots);
 	void dumpResistances(Resistance r, int indent);
-	void dumpSpecials(int s, int indent);
+	void dumpBuffs(list<Buff*> s, int indent);
 	void dumpStats(int indent);
 	int getAV(void);
 	Resistance* getResistance(void);
-	int getSpecial(void);
+	list<Buff*>* getBuffs(void);
 };
 
 

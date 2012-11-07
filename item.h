@@ -1,6 +1,7 @@
 #ifndef __ITEM_H__
 #define __ITEM_H__
 #include <list>
+#include "buff.h"
 
 using namespace std;
 
@@ -17,10 +18,12 @@ protected:
 	char icon;
 	int slot; //slot 0 is the character's inventory. Everything else is character specific
 	list<int> allowed_slots;
+	list<Buff*> buffs;
 public:
 	Item(void);
 	virtual ~Item(void);
 	virtual void dumpStats(void);
+	void addBuff(Buff *_buff);
 	int getSlot(void);
 	void setSlot(int s);
 	bool isAllowedInSlot(int _slot);
