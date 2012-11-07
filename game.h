@@ -7,6 +7,7 @@
 #include "weapon.h"
 #include "character.h"
 #include "shield.h"
+#include "floor.h"
 
 //TODO: make this safe
 #define INDENTER(X, Y)	char *Y = new char[X+1]; \

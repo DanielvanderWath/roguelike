@@ -10,15 +10,15 @@ void init(void)
 	srand(time(0));
 }
 
-void kill(Character *killer, Character *killed, list<Item*> *lstFloor)
+void kill(Character *killer, Character **killed, list<Item*> *lstFloor)
 {
 	//take all of its items
 	list<Item*> lstDrop;
-	killed->giveInventory(&lstDrop);
+	(*killed)->giveInventory(&lstDrop);
 	//drop them on the floor
 	if(!lstDrop.empty())
 	{
-		OUTPUT(killed->getName() << " drops:" );
+		OUTPUT((*killed)->getName() << " drops:" );
 		while(!lstDrop.empty())
 		{
 			OUTPUT("\t" << lstDrop.front()->getName() );
@@ -27,8 +27,9 @@ void kill(Character *killer, Character *killed, list<Item*> *lstFloor)
 		}
 	}
 
-	killer->addXP(killed->getXPValue());
-	delete killed;
+	killer->addXP((*killed)->getXPValue());
+	delete *killed;
+	(*killed) = NULL;
 }
 
 int main(int argc, char **argv)
@@ -38,6 +39,10 @@ int main(int argc, char **argv)
 	//this list will serve as the inventory of a floor tile. Later each floor tile will have its own.
 	list<Item*> lstFloor;
 
+	//create a floor
+	Floor *floor = new Floor(3, 3);
+	floor->generate();
+
 	//TODO: load this from a file later
 	//int num_races = 3;
 	Race races[]={	Race("Human", 28, 4, 8, 4),
@@ -46,6 +51,9 @@ int main(int argc, char **argv)
 			};
 	//player, TODO: ask them for name, class and race
 	Character *pc = new Character("Dan", &races[0], MALE);
+
+	//put them in the bottom left hand corner
+	floor->getTile(0, 0)->occupy(pc);
 
 	//a piece of armour
 	Armour *breastPlate = new Armour("Lazarus Suit", 4, 3, NULL, NULL, list<int>(1, SLOT_TORSO));
@@ -85,6 +93,8 @@ int main(int argc, char **argv)
 	//spawn a goblin
 	Character *goblin = new Character("Grizott", &races[2], FEMALE);
 	goblin->setXPValue((rand() % 20) + 20);
+	//put it next to the player
+	floor->getTile(0,1)->occupy(goblin);
 
 	//give the goblin a weapon
 	Weapon *stick = new Weapon("Pointy stick", 2, 2, 2, 2, true);
@@ -98,7 +108,7 @@ int main(int argc, char **argv)
 		(bPlayerTurn ? pc : goblin)->attackBasic(bPlayerTurn ? goblin : pc);
 		if((bPlayerTurn ? goblin: pc)->isDead())
 		{
-			kill((bPlayerTurn ? pc : goblin), (bPlayerTurn ? goblin: pc), &lstFloor);
+			kill((bPlayerTurn ? pc : goblin), &(bPlayerTurn ? goblin: pc), &lstFloor);
 			bOver = true;
 		}
 
@@ -110,7 +120,11 @@ int main(int argc, char **argv)
 
 	}
 
-	//see if the goblin died, if so reward the pc
+	if( !goblin)
+	{
+		pc->pickUp(stick);
+	}
+	pc->dumpStats(0);
 
 	return 0;
 }

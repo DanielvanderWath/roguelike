@@ -6,6 +6,7 @@
 #include "weapon.h"
 #include "resistance.h"
 #include "buff.h"
+#include "floor.h"
 #include <list>
 
 class Armour;
@@ -28,6 +29,7 @@ private:
 	int hp, hpmax, mp, mpmax;
 	int AV;
 	int xp, xpValue;
+	FloorTile *position;
 	Resistance resistance;
 	int armourSpecial;
 	char *name;
@@ -50,11 +52,14 @@ public:
 	void calcDefence(void);
 	bool attackBasic(Character *target);
 	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else
+	void pickUp(Item* item);
 	void addBuff(Buff *b);
 	void addMP(int m);
 	void addHP(int h);
 	void tickBuffs(void);
 	void removeAllBuffs(void);
+	void moveTo(FloorTile *tile);
+	FloorTile* getPosition(void);
 	const char* getName(void);
 	int getAV(void);
 	int getXP(void);
@@ -65,6 +70,7 @@ public:
 	Hand* getLeftHand(void);
 	Hand* getRightHand(void);
 	bool isDead(void);
+	
 };
 
 

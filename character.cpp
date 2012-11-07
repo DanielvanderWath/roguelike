@@ -308,6 +308,15 @@ bool Character::hitPhysical(int damage)
 	return crit;
 }
 
+void Character::pickUp(Item* item)
+{
+	if(item)
+	{
+		inventory.push_back(item);
+		OUTPUT(name << " picked up the " << item->getName() );
+	}
+}
+
 void Character::addBuff(Buff *b)
 {
 	buffs.push_back(b);
@@ -353,6 +362,17 @@ void Character::removeAllBuffs(void)
 	{
 		buffs.pop_front();
 	}
+}
+
+void moveTo(FloorTile *tile)
+{
+	tile->occupy(this);
+	position = tile;
+}
+
+FloorTile* getPosition(void)
+{
+	return position;
 }
 
 const char* Character::getName(void)
