@@ -2,6 +2,12 @@
 
 all: roguelike
 
+ifeq ($(TEST), 1)
+MAIN = test.cpp
+else
+MAIN = main.cpp
+endif
+
 SRC = 	armour.cpp \
 	character.cpp \
 	race.cpp \
@@ -12,7 +18,7 @@ SRC = 	armour.cpp \
 	shield.cpp \
 	buff.cpp \
 	effect.cpp \
-	main.cpp
+	$(MAIN)
 
 LIB = 
 
