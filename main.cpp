@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	init();
 
 	//this list will serve as the inventory of a floor tile. Later each floor tile will have its own.
-	list<Item*> theFloor;
+	list<Item*> lstFloor;
 
 	//TODO: load this from a file later
 	//int num_races = 3;
@@ -51,13 +51,32 @@ int main(int argc, char **argv)
 	//spawn a goblin
 	Character *goblin = new Character("Grizott", &races[2], FEMALE);
 	goblin->setXPValue((rand() % 20) + 20);
+
+	//give the goblin a weapon
+	Weapon *stick = new Weapon("Pointy stick", 2, 2, 2, 2, 0, true);
+	goblin->equip(stick, SLOT_HAND_RIGHT);
+
 	pc.attackBasic(goblin);
 
 	//see if the goblin died, if so reward the pc
 	if(goblin->isDead())
 	{
+		//take all of its items
+		list<Item*> lstDrop;
+		goblin->giveInventory(&lstDrop);
+		//list them
+		if(!lstDrop.empty())
+		{
+			OUTPUT(goblin->getName() << " drops:" );
+			while(!lstDrop.empty())
+			{
+				OUTPUT("\t" << lstDrop.front()->getName() );
+				lstFloor.push_back(lstDrop.front());
+				lstDrop.pop_front();
+			}
+		}
+
 		pc.addXP(goblin->getXPValue());
-		goblin->giveInventory(&theFloor);
 		delete goblin;
 	}
 

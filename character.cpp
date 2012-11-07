@@ -130,9 +130,9 @@ void Character::giveInventory(list<Item*> *target)
 	unequip(left);
 	unequip(right);
 
-	for(list<Item*>::iterator it = inventory.begin(); it != inventory.end(); it++)
+	while(!inventory.empty())
 	{
-		target->push_back(*it);
+		target->push_back(inventory.front());
 		inventory.pop_front();
 	}
 }
