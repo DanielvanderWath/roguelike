@@ -2,11 +2,15 @@
 
 all: roguelike
 
+TEST ?= 0
+
 ifeq ($(TEST), 1)
 MAIN = test.cpp
 else
 MAIN = main.cpp
 endif
+
+
 
 SRC = 	armour.cpp \
 	character.cpp \
@@ -20,9 +24,10 @@ SRC = 	armour.cpp \
 	effect.cpp \
 	floor.cpp \
 	floortile.cpp \
+	display.cpp \
 	$(MAIN)
 
-LIB = 
+LIB = -lncurses
 
 INC = 
 
