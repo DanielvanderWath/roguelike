@@ -18,6 +18,8 @@ SRC = 	armour.cpp \
 	shield.cpp \
 	buff.cpp \
 	effect.cpp \
+	floor.cpp \
+	floortile.cpp \
 	$(MAIN)
 
 LIB = 

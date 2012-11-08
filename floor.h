@@ -9,14 +9,14 @@
 class FloorTile
 {
 protected:
-	std::list<Item*> inventory(void);
+	std::list<Item*> inventory;
 	Character *occupier;
 public:
 	FloorTile(void);
 	~FloorTile(void);
 	void dumpInventory(void);
 	std::list<Item*>* getInventory(void);
-	void occupy(Character* _occupier);
+	bool occupy(Character* _occupier);
 	void leave(void);
 	bool isOccupied(void);
 	Character* getOccupier(void);

@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	Character *pc = new Character("Dan", &races[0], MALE);
 
 	//put them in the bottom left hand corner
-	floor->getTile(0, 0)->occupy(pc);
+	pc->moveTo(floor->getTile(0, 0));
 
 	//a piece of armour
 	Armour *breastPlate = new Armour("Lazarus Suit", 4, 3, NULL, NULL, list<int>(1, SLOT_TORSO));
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 	Character *goblin = new Character("Grizott", &races[2], FEMALE);
 	goblin->setXPValue((rand() % 20) + 20);
 	//put it next to the player
-	floor->getTile(0,1)->occupy(goblin);
+	goblin->moveTo(floor->getTile(0,1));
 
 	//give the goblin a weapon
 	Weapon *stick = new Weapon("Pointy stick", 2, 2, 2, 2, true);
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 		(bPlayerTurn ? pc : goblin)->attackBasic(bPlayerTurn ? goblin : pc);
 		if((bPlayerTurn ? goblin: pc)->isDead())
 		{
-			kill((bPlayerTurn ? pc : goblin), &(bPlayerTurn ? goblin: pc), &lstFloor);
+			kill((bPlayerTurn ? pc : goblin), &(bPlayerTurn ? goblin: pc), (goblin->getPosition()->getInventory()));
 			bOver = true;
 		}
 
@@ -122,7 +122,8 @@ int main(int argc, char **argv)
 
 	if( !goblin)
 	{
-		pc->pickUp(stick);
+		for(list<Item*>::iterator it = floor->getTile(0,1)->getInventory()->begin(); it != floor->getTile(0,1)->getInventory()->end(); it++)
+			pc->pickUp(*it);
 	}
 	pc->dumpStats(0);
 

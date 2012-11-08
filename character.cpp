@@ -364,13 +364,13 @@ void Character::removeAllBuffs(void)
 	}
 }
 
-void moveTo(FloorTile *tile)
+void Character::moveTo(FloorTile *tile)
 {
 	tile->occupy(this);
 	position = tile;
 }
 
-FloorTile* getPosition(void)
+FloorTile* Character::getPosition(void)
 {
 	return position;
 }

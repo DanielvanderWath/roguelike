@@ -14,7 +14,7 @@
 			memset(Y, '\t', X); \
 			Y[X] = 0;//NULL terminate
 
-#define OUTPUT(X) cout << "\n---" << X << endl
+#define OUTPUT(X) std::cout << "\n---" << X << endl
 
 #define CLAMP(low, X, high) (low > X ? low : high < X ? high : X)
 

@@ -12,6 +12,7 @@
 class Armour;
 class Item;
 class Buff;
+class FloorTile;
 
 using namespace std;
 
