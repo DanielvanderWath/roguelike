@@ -21,6 +21,11 @@ int Item::getSlot(void)
 	return slot;
 }
 
+char Item::getAppearance(void)
+{
+	return icon;
+}
+
 void Item::setSlot(int s)
 {
 	slot = s;

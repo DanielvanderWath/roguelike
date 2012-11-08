@@ -34,6 +34,7 @@ private:
 	Resistance resistance;
 	int armourSpecial;
 	char *name;
+	char appearance;
 	Gender gender;
 	Race *race;
 	//Class *cclass;
@@ -62,6 +63,7 @@ public:
 	void moveTo(FloorTile *tile);
 	FloorTile* getPosition(void);
 	const char* getName(void);
+	char getAppearance(void);
 	int getAV(void);
 	int getXP(void);
 	void addXP(int _xp);

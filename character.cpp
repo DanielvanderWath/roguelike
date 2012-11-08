@@ -40,6 +40,8 @@ Character::Character(const char *n, Race *r, Gender g)
 
 	gender = g;
 
+	appearance = '@';
+
 	race = r;
 	hpmax = race->hp();
 	hp = hpmax;
@@ -378,6 +380,11 @@ FloorTile* Character::getPosition(void)
 const char* Character::getName(void)
 {
 	return (const char*) name;
+}
+
+char Character::getAppearance(void)
+{
+	return appearance;
 }
 
 int Character::getAV(void)

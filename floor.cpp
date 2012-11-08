@@ -38,7 +38,7 @@ int Floor::getHeight(void)
 FloorTile* Floor::getTile(int x, int y)
 {
 	if(x < width && y < height)
-		return tiles[x*height + width];
+		return tiles[x*height + y];
 	OUTPUT("ERROR: tile " << x << "," << y << " is out of bounds" );
 	return NULL;
 }

@@ -2,7 +2,7 @@
 
 all: roguelike
 
-TEST ?= 0
+TEST ?= 1 #use test mode by default for now
 
 ifeq ($(TEST), 1)
 MAIN = test.cpp

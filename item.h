@@ -25,6 +25,7 @@ public:
 	virtual void dumpStats(void);
 	void addBuff(Buff *_buff);
 	int getSlot(void);
+	char getAppearance(void);
 	void setSlot(int s);
 	bool isAllowedInSlot(int _slot);
 	const char* getName(void);

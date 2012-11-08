@@ -36,8 +36,8 @@ int main(int argc, char **argv)
 {
 	init();
 
-	//this list will serve as the inventory of a floor tile. Later each floor tile will have its own.
-	list<Item*> lstFloor;
+	Display display;
+	
 
 	//create a floor
 	Floor *floor = new Floor(3, 3);
@@ -114,9 +114,11 @@ int main(int argc, char **argv)
 
 		(bPlayerTurn ? pc : goblin)->tickBuffs();
 
-		usleep(500000);
+		//usleep(500000);
 
 		bPlayerTurn = !bPlayerTurn;
+		
+		display.drawMap(floor);
 
 	}
 

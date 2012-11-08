@@ -35,18 +35,18 @@ bool Buff::tick(Character* target)
 		target->addHP(hpPerTurn);
 
 		if(hpPerTurn < 0)
-			OUTPUT( name << " did " << -hpPerTurn << " damage to " << target->getName() );
+			OUTPUT( name << " did " << -hpPerTurn << " damage to " << target->getName() )
 		else
-			OUTPUT( target->getName() << " was healed " << hpPerTurn << "HP by " << name );
+			OUTPUT( target->getName() << " was healed " << hpPerTurn << "HP by " << name )
 	}
 	if(mpPerTurn)
 	{
 		target->addMP(mpPerTurn);
 
 		if(mpPerTurn < 0)
-			OUTPUT( name << " did " << -mpPerTurn << " damage to " << target->getName() );
+			OUTPUT( name << " did " << -mpPerTurn << " damage to " << target->getName() )
 		else
-			OUTPUT( target->getName() << " was recharged " << mpPerTurn << "MP by " << name );
+			OUTPUT( target->getName() << " was recharged " << mpPerTurn << "MP by " << name )
 	}
 	if(--timeLeft > 0)
 		return false;
