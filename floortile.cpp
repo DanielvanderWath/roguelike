@@ -8,6 +8,13 @@ FloorTile::FloorTile(void)
 
 FloorTile::~FloorTile(void){}
 
+FloorTile::FloorTile(int _x, int _y)
+{
+	occupier = NULL;
+	x = _x;
+	y = _y;
+}
+
 void FloorTile::dumpInventory(void)
 {
 	if(!inventory.empty())
@@ -52,5 +59,15 @@ bool FloorTile::isOccupied(void)
 Character* FloorTile::getOccupier(void)
 {
 	return occupier;
+}
+
+int FloorTile::getX(void)
+{
+	return x;
+}
+
+int FloorTile::getY(void)
+{
+	return y;
 }
 

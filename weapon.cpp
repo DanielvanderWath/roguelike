@@ -29,26 +29,18 @@ Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, bool
 
 void Weapon::dumpSpecials(int s, int indent)
 {
-	INDENTER(indent, indenter)
-
-	cout << indenter << "Specials:";
+	OUTPUTI("Specials:", indent)
 	if( WEAPON_EFFECT_POISON & s )
-		cout << "\n" << indenter << "Poison";
-
-	cout << endl;
-
-	delete indenter;
+		OUTPUTI("Poison", indent+1);
 }
 
 void Weapon::dumpStats(int indent)
 {
-	indent++;
-	INDENTER(indent, indenter)
-
-	cout << indenter << "Name:\t" << name << "\n" << indenter << "Icon:\t" << icon << "\n" << indenter << "Damage:\t" << damage_min << "-" << damage_min + damage_var << "\n";
-
-	//dumpSpecials(special, indent);
-
+	OUTPUTI("Name:\t" << name, indent);
+	OUTPUTI("Icon:\t" << icon, indent);
+	OUTPUTI("Damage:\t" << damage_min << "-" << damage_min + damage_var, indent);
+	//TODO: rewrite dumpSpecials to use effects
+	//dumpSpecials(special, indent+1);
 }
 
 bool Weapon::attack(Character *target, bool offHand)

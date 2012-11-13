@@ -1,4 +1,5 @@
 #include "item.h"
+#include "game.h"
 #include <iostream>
 
 using namespace std;
@@ -8,7 +9,7 @@ Item::~Item(void){}
 
 void Item::dumpStats(void)
 {
-	cout << "Name:\t" << name << "\nIcon:\t" << icon << endl;
+	OUTPUT("Name:\t" << name << "\nIcon:\t" << icon);
 }
 
 void Item::addBuff(Buff *_buff)

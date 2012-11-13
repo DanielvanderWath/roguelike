@@ -1,11 +1,18 @@
 #include "display.h"
 
+int Display::bufferSize=0;//static, need to allocate storage somewhere
+
 Display::Display(void)
 {
 	initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
+
+	//hide the cursor
+	curs_set(0);
+
+	bufferSize = 10;
 }
 
 Display::~Display(void){endwin();}
@@ -51,10 +58,27 @@ char Display::getAppearance(FloorTile *tile)
 	return '.';
 }
 
+int Display::getBufferSize(void)
+{
+	return bufferSize;
+}
+
+void Display::setBufferSize(int size)
+{
+	//TODO: if we're reducing the size of the buffer, clear the now empty lines
+	bufferSize = size;
+}
+
+void Display::waitForKey(int key)
+{
+	while(getch() != key){}
+}
+
+//void Display::output_common
+
 void Display::output(std::string str)
 {
 	int width, height;
-	int bufferSize = 5;
 	static list<std::string> buffer(bufferSize, "");
 
 	buffer.pop_back();
@@ -71,5 +95,12 @@ void Display::output(std::string str)
 	}
 
 	refresh();
-	getch();
+	waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
 }
+
+void Display::dialogue(std::string str, const char *choices)
+{
+	OUTPUT(str);
+}
+
+

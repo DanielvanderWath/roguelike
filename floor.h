@@ -11,15 +11,19 @@ class FloorTile
 protected:
 	std::list<Item*> inventory;
 	Character *occupier;
+	int x, y;
 public:
 	FloorTile(void);
 	~FloorTile(void);
+	FloorTile(int _x, int _y);
 	void dumpInventory(void);
 	std::list<Item*>* getInventory(void);
 	bool occupy(Character* _occupier);
 	void leave(void);
 	bool isOccupied(void);
 	Character* getOccupier(void);
+	int getX(void);
+	int getY(void);
 };
 
 class Floor

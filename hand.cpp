@@ -1,4 +1,5 @@
 #include "hand.h"
+#include "game.h"
 #include <iostream>
 
 using namespace std;
@@ -28,5 +29,5 @@ bool Hand::isWeapon(void)
 
 void Hand::dumpStats(int indent)
 {
-	cout << "This shouldn't have been called: " << __func__ << ":" << __LINE__ << endl;
+	OUTPUTI("This shouldn't have been called: " << __func__ << ":" << __LINE__, indent);
 }

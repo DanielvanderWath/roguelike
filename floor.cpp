@@ -12,10 +12,17 @@ Floor::Floor(int w, int h)
 
 void Floor::generate()
 {
+	int x=0, y=0;
 	tiles.resize(width*height);
 	for(vector<FloorTile*>::iterator it = tiles.begin(); it != tiles.end(); it++)
 	{
-		(*it) = new FloorTile();
+		if(++x==width)
+		{
+			x = 0;
+			y++;
+		}
+
+		(*it) = new FloorTile(x, y);
 	}
 }
 

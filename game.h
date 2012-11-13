@@ -25,7 +25,12 @@
 		str << "---" << X ; \
 		Display::output(str.str() );}
 
-//#define OUTPUT(X) std::cout << "\n---" << X << endl
+#define OUTPUTI(X, I) \
+		{ std::ostringstream str; \
+		for(int i = 0; i < I ; i++) \
+			str << "---" ; \
+		str << X ; \
+		Display::output(str.str() );}
 
 #define CLAMP(low, X, high) (low > X ? low : high < X ? high : X)
 

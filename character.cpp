@@ -56,23 +56,20 @@ Character::Character(const char *n, Race *r, Gender g)
 	right = NULL;
 }
 
-#define dump(X, Y)	cout << X << "\n"; \
+#define dump(X, Y)	OUTPUTI(X, indent); \
 			if(Y) \
-				Y->dumpStats(indent); \
+				Y->dumpStats(indent+1); \
 			else \
-				cout << "\tNone" << endl;
+				OUTPUTI("None", indent);
 
 void Character::dumpStats(int indent)
 {
-	INDENTER(indent, indenter)
-	indent++;
-	cout 	<< indenter << "Name:\t" << name << "\n" 
-		<< indenter << "Race:\t" << race->name() << "\n" 
-		<< indenter << "HP:\t" << hp << "/" << hpmax << "\n" 
-		<< "AV:\t" << AV  << "\n" 
-		<< indenter << "MP:\t" << mpmax << "\n" 
-		<< indenter << "XP:\t" << xp << "\n" 
-		<< endl;
+	OUTPUTI("Name:\t" << name, indent);
+	OUTPUTI("Race:\t" << race->name(), indent);
+	OUTPUTI("HP:\t" << hp << "/" << hpmax, indent);
+	OUTPUTI("AV:\t" << AV, indent);
+	OUTPUTI("MP:\t" << mpmax, indent);
+	OUTPUTI("XP:\t" << xp, indent);
 
 	dump("Torso:", torso)
 	dump("Right Hand:", right)
@@ -80,20 +77,19 @@ void Character::dumpStats(int indent)
 
 	listInventory();
 
-	delete indenter;
 }
 
 void Character::listInventory(void)
 {
 	if(!inventory.empty())
 	{
-		cout << name << " has the following items in " << possessive_pronoun[gender] << " inventory:\n";
+		OUTPUT(name << " has the following items in " << possessive_pronoun[gender] << " inventory:");
 
 		for(list<Item*>::iterator it=inventory.begin(); it != inventory.end(); it++)
-			cout << "\t" << (*it)->getName() << "\n";
+			OUTPUTI((*it)->getName(), 1);
 	}
 	else
-		cout << name << " has nothing in " << possessive_pronoun[gender] << " inventory.\n";
+		OUTPUT(name << " has nothing in " << possessive_pronoun[gender] << " inventory.");
 }
 
 void Character::unequip(Item *a)
@@ -118,7 +114,7 @@ void Character::unequip(Item *a)
 			right = NULL;
 			break;
 		default:
-			cout << "Error: trying to unequip item from invalid slot" << endl;
+			OUTPUT("Error: trying to unequip item from invalid slot");
 			return;
 	}
 	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
