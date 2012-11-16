@@ -25,6 +25,7 @@ public:
 	void kill(Character *killer, Character **killed);
 	void moveCharacter(Character *c, DIRECTION dir);
 	Floor *getFloor(void);
+	void mainLoop(Display display);
 };
 
 void Game::init(void)
@@ -86,9 +87,18 @@ void Game::kill(Character *killer, Character **killed)
 	(*killed) = NULL;
 }
 
-void Game::getFloor(void)
+Floor* Game::getFloor(void)
 {
 	return floor;
+}
+
+void Game::mainLoop(Display display)
+{
+	while(!quit)
+	{
+		display.drawMap(getFloor());
+		doActionFromUser();
+	}
 }
 
 int main(int argc, char **argv)
@@ -101,12 +111,7 @@ int main(int argc, char **argv)
 	Game game;
 	game.init();
 
-	bool quit = false;
-	while(!quit)
-	{
-		display.drawMap(game.getFloor());
-		game.doActionFromUser();
-	}
+	game.mainLoop(display);
 
 	return 0;
 }

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(roguelike)
 
+set(CMAKE_BUILD_TYPE debug)
+
 add_executable(	roguelike 
 
 		armour.cpp
