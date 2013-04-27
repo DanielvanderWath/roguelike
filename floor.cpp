@@ -16,13 +16,13 @@ void Floor::generate()
 	tiles.resize(width*height);
 	for(vector<FloorTile*>::iterator it = tiles.begin(); it != tiles.end(); it++)
 	{
+		(*it) = new FloorTile(x, y);
+
 		if(++x==width)
 		{
 			x = 0;
 			y++;
 		}
-
-		(*it) = new FloorTile(x, y);
 	}
 }
 
@@ -42,10 +42,20 @@ int Floor::getHeight(void)
 	return height;
 }
 
+int Floor::getRight(void)
+{
+	return width - 1;
+}
+
+int Floor::getBottom(void)
+{
+	return height - 1;
+}
+
 FloorTile* Floor::getTile(int x, int y)
 {
 	if(x < width && y < height)
-		return tiles[x*height + y];
+		return tiles[y*width + x];
 	OUTPUT("ERROR: tile " << x << "," << y << " is out of bounds" );
 	return NULL;
 }

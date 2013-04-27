@@ -73,6 +73,7 @@ public:
 	Hand* getLeftHand(void);
 	Hand* getRightHand(void);
 	bool isDead(void);
+	void bump(void);
 	
 };
 

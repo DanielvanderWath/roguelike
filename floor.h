@@ -39,6 +39,8 @@ public:
 	void setDim(int w, int h);
 	int getWidth(void);
 	int getHeight(void);
+	int getRight(void);
+	int getBottom(void);
 	FloorTile* getTile(int x, int y);
 };
 

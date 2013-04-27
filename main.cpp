@@ -53,7 +53,53 @@ void Game::init(void)
 void Game::moveCharacter(Character *c, DIRECTION dir)
 {
 	FloorTile *old = c->getPosition();
-	//FloorTile *next = floor->getTile(c->
+	FloorTile *next = NULL;
+
+	switch(dir)
+	{
+		case DIRECTION_WEST:
+		{
+			//if we're at the left wall
+			if(old->getX() == 0)
+				pc->bump();
+			else
+				next = floor->getTile(old->getX() - 1, old->getY());
+			break;
+		}
+		case DIRECTION_NORTH:
+		{
+			//if we're at the top wall
+			if(old->getY() == 0)
+				pc->bump();
+			else
+				next = floor->getTile(old->getX(), old->getY() - 1);
+			break;
+		}
+		case DIRECTION_SOUTH:
+		{
+			//if we're at the bottom wall
+			if(old->getY() == floor->getBottom())
+				pc->bump();
+			else
+				next = floor->getTile(old->getX(), old->getY() + 1);
+			break;
+		}
+		case DIRECTION_EAST:
+		{
+			//if we're at the right-hand wall
+			if(old->getX() == floor->getRight())
+				pc->bump();
+			else
+				next = floor->getTile(old->getX() + 1, old->getY());
+			break;
+		}
+		default:
+			OUTPUT("INVALID DIRECTION SPECIFIED 0x" << hex << dir << endl);
+	}
+
+	//if next is still NULL then we were unable to move
+	if(next)
+		c->moveTo(next);
 }
 
 void Game::doActionFromUser(void)
@@ -64,9 +110,30 @@ void Game::doActionFromUser(void)
 		case 'q':
 			quit = true;
 			break;
-		case KEY_UP:
+		case KEY_LEFT:
 		case 'h':
+		{
+			moveCharacter(pc, DIRECTION_WEST);
+			break;
+		}
+		case KEY_DOWN:
+		case 'j':
+		{
+			moveCharacter(pc, DIRECTION_SOUTH);
+			break;
+		}
+		case KEY_UP:
+		case 'k':
+		{
 			moveCharacter(pc, DIRECTION_NORTH);
+			break;
+		}
+		case KEY_RIGHT:
+		case 'l':
+		{
+			moveCharacter(pc, DIRECTION_EAST);
+			break;
+		}
 		default:
 			break;//do nothing on unrecognised key
 	}

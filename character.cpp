@@ -362,37 +362,48 @@ void Character::removeAllBuffs(void)
 	}
 }
 
+// *** Move Character from one tile to another ***
 void Character::moveTo(FloorTile *tile)
 {
+	//we might not have a position right now, e.g. at the start of the game
+	if(position)
+		position->leave();
+
 	tile->occupy(this);
 	position = tile;
 }
 
+// *** Return the FloorTile the Character is currently standing on ***
 FloorTile* Character::getPosition(void)
 {
 	return position;
 }
 
+// *** return a char array containing the Character's name ***
 const char* Character::getName(void)
 {
 	return (const char*) name;
 }
 
+// *** return the char used to represent the Character when drawing it ***
 char Character::getAppearance(void)
 {
 	return appearance;
 }
 
+// *** return the Character's armour value ***
 int Character::getAV(void)
 {
 	return AV;
 }
 
+// *** return the Character's current XP count ***
 int Character::getXP(void)
 {
 	return xp;
 }
 
+// *** increase the Character's XP ***
 void Character::addXP(int _xp)
 {
 	xp += _xp;
@@ -400,11 +411,13 @@ void Character::addXP(int _xp)
 	//TODO: level up
 }
 
+// *** return the Character's current XP count ***
 int Character::getXPValue(void)
 {
 	return xpValue;
 }
 
+// *** Force the Character's current XP count to a specific value ***
 void Character::setXPValue(int _xp)
 {
 	//use this for setting the XP value for NPCs
@@ -437,3 +450,7 @@ bool Character::isDead(void)
 	return false;
 }
 
+void Character::bump(void)
+{
+	OUTPUT(name << " walks into a wall!" << endl);
+}
