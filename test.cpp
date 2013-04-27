@@ -38,6 +38,8 @@ int main(int argc, char **argv)
 
 	Display display;
 	
+	//hard code for test
+	display.setBufferSize(30);
 
 	//create a floor
 	Floor *floor = new Floor(3, 3);

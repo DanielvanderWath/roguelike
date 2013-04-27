@@ -19,6 +19,8 @@ protected:
 	Floor *floor;
 	Character *pc;
 	bool quit;
+	//Drawing class
+	Display display;
 public:
 	void init(void);
 	Character *createPlayer(void);
@@ -26,7 +28,7 @@ public:
 	void kill(Character *killer, Character **killed);
 	void moveCharacter(Character *c, DIRECTION dir);
 	Floor *getFloor(void);
-	void mainLoop(Display display);
+	void mainLoop(void);
 };
 
 Character* Game::createPlayer(void)
@@ -44,6 +46,8 @@ void Game::init(void)
 	//create a map
 	floor = new Floor(MAP_WIDTH, MAP_HEIGHT);
 	floor->generate();
+
+	display.setBufferSize(display.getWindowHeight() - MAP_HEIGHT);
 
 	//temp race
 	pc = createPlayer();
@@ -166,7 +170,7 @@ Floor* Game::getFloor(void)
 	return floor;
 }
 
-void Game::mainLoop(Display display)
+void Game::mainLoop(void)
 {
 	while(!quit)
 	{
@@ -178,14 +182,12 @@ void Game::mainLoop(Display display)
 int main(int argc, char **argv)
 {
 
-	//Drawing class
-	Display display;
 
 	//initialise
 	Game game;
 	game.init();
 
-	game.mainLoop(display);
+	game.mainLoop();
 
 	return 0;
 }

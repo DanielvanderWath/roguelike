@@ -54,6 +54,8 @@ Character::Character(const char *n, Race *r, Gender g)
 	torso =NULL;	
 	left = NULL;
 	right = NULL;
+
+	position = NULL;
 }
 
 #define dump(X, Y)	OUTPUTI(X, indent); \

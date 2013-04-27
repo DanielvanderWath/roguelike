@@ -1,6 +1,7 @@
 #include "display.h"
 
 int Display::bufferSize=0;//static, need to allocate storage somewhere
+int Display::iWinWidth=0, Display::iWinHeight=0;
 
 Display::Display(void)
 {
@@ -12,16 +13,24 @@ Display::Display(void)
 	//hide the cursor
 	curs_set(0);
 
-	bufferSize = 10;
+	//initialise to zero, game class is responsible for calling setBufferSize
+	bufferSize = 0;
+
+	getmaxyx(stdscr, iWinHeight, iWinWidth);
 }
 
 Display::~Display(void){endwin();}
 void Display::drawMap(Floor *floor)
 {
 	int winWidth, winHeight, floorWidth, floorHeight;
+
 	getmaxyx(stdscr, winHeight, winWidth);
+
 	floorWidth = floor->getWidth();
 	floorHeight = floor->getHeight();
+
+	setBufferSize(winHeight - floorHeight);
+
 	if( floorWidth <= winWidth && floorHeight <= winHeight)
 	{
 		for(int x = 0; x < floorWidth; x++)
@@ -63,10 +72,37 @@ int Display::getBufferSize(void)
 	return bufferSize;
 }
 
-void Display::setBufferSize(int size)
+int Display::getWindowHeight(void)
 {
-	//TODO: if we're reducing the size of the buffer, clear the now empty lines
-	bufferSize = size;
+	return iWinHeight;
+}
+
+// *** Set the size of the message output buffer ***
+void Display::setBufferSize(int iSize)
+{
+	//return early if we don't need to do anything
+	if(iSize == bufferSize)
+	{
+		return;
+	}
+
+	if(iSize < 1)
+	{
+		OUTPUT("TRYING TO SET OUTPUT BUFFER SIZE TO LESS THAN 1");
+		return;
+	}
+
+	/*if(iSize < bufferSize)
+	{
+		int i;
+		for(i = height - bufferSize - 1; i < iSize; i++)
+		{
+			move(i, 0);
+			clrtoeol();
+		}
+	}*/
+
+	bufferSize = iSize;
 }
 
 void Display::waitForKey(int key)
@@ -80,6 +116,12 @@ void Display::output(std::string str)
 {
 	int width, height;
 	static list<std::string> buffer(bufferSize, "");
+
+	if(bufferSize == 0)
+	{
+		cout << "Calling " << __func__ << " before initialising buffer size" << endl;
+		return;
+	}
 
 	buffer.pop_back();
 	buffer.push_front(std::string(str));

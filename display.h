@@ -12,6 +12,7 @@ class Display
 {
 protected:
 	static int bufferSize;
+	static int iWinWidth, iWinHeight;
 public:
 	Display(void);
 	~Display(void);
@@ -19,6 +20,7 @@ public:
 	static void drawHUD(Character *pc);
 	static char getAppearance(FloorTile *tile);
 	static int getBufferSize(void);
+	static int getWindowHeight(void);
 	static void setBufferSize(int size);
 	static void waitForKey(int key);
 	static void output(std::string str);
