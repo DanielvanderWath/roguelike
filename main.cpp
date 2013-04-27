@@ -21,12 +21,20 @@ protected:
 	bool quit;
 public:
 	void init(void);
+	Character *createPlayer(void);
 	void doActionFromUser(void);
 	void kill(Character *killer, Character **killed);
 	void moveCharacter(Character *c, DIRECTION dir);
 	Floor *getFloor(void);
 	void mainLoop(Display display);
 };
+
+Character* Game::createPlayer(void)
+{
+	OUTPUT("Welcome traveller!");
+	Race *tempRace = new Race("Temp", 28, 4, 8, 4);
+	return new Character("Temp", tempRace, MALE);
+}
 
 void Game::init(void)
 {
@@ -38,8 +46,7 @@ void Game::init(void)
 	floor->generate();
 
 	//temp race
-	Race *tempRace = new Race("Temp", 28, 4, 8, 4);
-	pc = new Character("Temp", tempRace, MALE);
+	pc = createPlayer();
 	pc->moveTo(floor->getTile(MAP_WIDTH/2, MAP_HEIGHT/2));
 }
 
