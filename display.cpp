@@ -137,7 +137,8 @@ void Display::output(std::string str)
 	}
 
 	refresh();
-	waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
+	//waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
+	getch();
 }
 
 void Display::dialogue(std::string str, const char *choices)
