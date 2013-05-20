@@ -5,6 +5,7 @@
 #include <list>
 #include "item.h"
 #include "character.h"
+#include "misc.h"
 
 class FloorTile
 {
@@ -42,6 +43,7 @@ public:
 	int getRight(void);
 	int getBottom(void);
 	FloorTile* getTile(int x, int y);
+	FloorTile* getTile(FloorTile *tile, DIRECTION dir);
 };
 
 #endif

@@ -1,9 +1,14 @@
 #ifndef __WEAPON_H__
 #define __WEAPON_H__
+
 #include <list>
+#include <string>
+#include <iostream>
+#include <sstream>
 #include "hand.h"
 #include "effect.h"
-#include "game.h"
+#include "misc.h"
+#include "display.h"
 
 class Character;
 class Effect;

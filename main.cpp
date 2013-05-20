@@ -5,32 +5,6 @@
 #define MAP_WIDTH 60
 #define MAP_HEIGHT 30
 
-enum DIRECTION
-{
-	DIRECTION_NORTH,
-	DIRECTION_EAST,
-	DIRECTION_SOUTH,
-	DIRECTION_WEST,
-};
-
-class Game
-{
-protected:
-	Floor *floor;
-	Character *pc;
-	bool quit;
-	//Drawing class
-	Display display;
-public:
-	void init(void);
-	Character *createPlayer(void);
-	void doActionFromUser(void);
-	void kill(Character *killer, Character **killed);
-	void moveCharacter(Character *c, DIRECTION dir);
-	Floor *getFloor(void);
-	void mainLoop(void);
-};
-
 Character* Game::createPlayer(void)
 {
 	OUTPUT("Welcome traveller!");
@@ -54,11 +28,13 @@ void Game::init(void)
 	pc->moveTo(floor->getTile(MAP_WIDTH/2, MAP_HEIGHT/2));
 }
 
-void Game::moveCharacter(Character *c, DIRECTION dir)
+// *** try to move character to the adjacent space in the given direction. return true if it moved, false otherwise ***
+bool Game::moveCharacter(Character *c, DIRECTION dir)
 {
 	FloorTile *old = c->getPosition();
-	FloorTile *next = NULL;
+	FloorTile *next = floor->getTile(old, dir);
 
+#if 0
 	switch(dir)
 	{
 		case DIRECTION_WEST:
@@ -100,46 +76,82 @@ void Game::moveCharacter(Character *c, DIRECTION dir)
 		default:
 			OUTPUT("INVALID DIRECTION SPECIFIED 0x" << hex << dir << endl);
 	}
+#endif
 
 	//if next is still NULL then we were unable to move
 	if(next)
+	{
 		c->moveTo(next);
+		return true;
+	}
+	else
+	{
+		pc->bump();
+		return false;
+	}
+}
+
+DIRECTION Game::getDirectionFromKey(int key)
+{
+	switch(key)
+	{
+		case KEY_LEFT:
+		case 'h':
+			return DIRECTION_WEST;
+		case KEY_DOWN:
+		case 'j':
+			return DIRECTION_SOUTH;
+		case KEY_UP:
+		case 'k':
+			return DIRECTION_NORTH;
+		case KEY_RIGHT:
+		case 'l':
+			return DIRECTION_EAST;
+		default:
+			return DIRECTION_INVALID;
+	}
 }
 
 void Game::doActionFromUser(void)
 {
 	int key = getch();
-	switch(key)
+	DIRECTION dir = getDirectionFromKey(key);
+
+	if(dir != DIRECTION_INVALID)
 	{
-		case 'q':
-			quit = true;
-			break;
-		case KEY_LEFT:
-		case 'h':
+		moveCharacter(pc, dir);
+	}
+	else
+	{
+		switch(key)
 		{
-			moveCharacter(pc, DIRECTION_WEST);
-			break;
+			case 'q':
+				quit = true;
+				break;
+			case 'w':
+				//extended walk command. repeatedly walk until we're about to collide with something
+				key = getch();
+				dir = getDirectionFromKey(key);
+				if(dir != DIRECTION_INVALID)
+				{
+					if( 	key == KEY_LEFT || key == 'h' ||
+						key == KEY_DOWN || key == 'j' ||
+						key == KEY_UP 	|| key == 'k' ||
+						key == KEY_LEFT || key == 'l')
+					{
+						while(floor->getTile(pc->getPosition(), dir))
+						{
+							moveCharacter(pc, dir);
+						}
+					}
+				}
+				else
+				{
+					OUTPUT(key << "is not a valid argument for extended walk" << endl);
+				}
+			default:
+				break;//do nothing on unrecognised key
 		}
-		case KEY_DOWN:
-		case 'j':
-		{
-			moveCharacter(pc, DIRECTION_SOUTH);
-			break;
-		}
-		case KEY_UP:
-		case 'k':
-		{
-			moveCharacter(pc, DIRECTION_NORTH);
-			break;
-		}
-		case KEY_RIGHT:
-		case 'l':
-		{
-			moveCharacter(pc, DIRECTION_EAST);
-			break;
-		}
-		default:
-			break;//do nothing on unrecognised key
 	}
 }
 
@@ -176,6 +188,7 @@ void Game::mainLoop(void)
 	{
 		display.drawMap(getFloor());
 		doActionFromUser();
+		display.setUserInputTrue();
 	}
 }
 

@@ -13,6 +13,7 @@ class Display
 protected:
 	static int bufferSize;
 	static int iWinWidth, iWinHeight;
+	static bool bUserInputSinceLastMessage;
 public:
 	Display(void);
 	~Display(void);
@@ -24,6 +25,7 @@ public:
 	static void setBufferSize(int size);
 	static void waitForKey(int key);
 	static void output(std::string str);
+	static void setUserInputTrue(void);
 	static void dialogue(std::string str, const char *choices);
 };
 

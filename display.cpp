@@ -2,6 +2,7 @@
 
 int Display::bufferSize=0;//static, need to allocate storage somewhere
 int Display::iWinWidth=0, Display::iWinHeight=0;
+bool Display::bUserInputSinceLastMessage = false;
 
 Display::Display(void)
 {
@@ -67,11 +68,13 @@ char Display::getAppearance(FloorTile *tile)
 	return '.';
 }
 
+// *** Return buffer size ***
 int Display::getBufferSize(void)
 {
 	return bufferSize;
 }
 
+// *** Return height ***
 int Display::getWindowHeight(void)
 {
 	return iWinHeight;
@@ -137,8 +140,15 @@ void Display::output(std::string str)
 	}
 
 	refresh();
-	//waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
-	getch();
+	if(!bUserInputSinceLastMessage)
+		waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
+
+	bUserInputSinceLastMessage = false;
+}
+
+void Display::setUserInputTrue(void)
+{
+	bUserInputSinceLastMessage = true;
 }
 
 void Display::dialogue(std::string str, const char *choices)
