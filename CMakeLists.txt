@@ -29,6 +29,7 @@ add_executable(	roguelike
 		game.h
 		hand.h
 		item.h
+		misc.h
 		race.h
 		resistance.h
 		shield.cpp
