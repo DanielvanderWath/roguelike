@@ -28,6 +28,9 @@ enum DIRECTION
 		str << X ; \
 		Display::output(str.str() );}
 
+#define ASK(X) \
+		Display::askUserForString(X)
+
 #define CLAMP(low, X, high) (low > X ? low : high < X ? high : X)
 
 

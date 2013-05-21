@@ -21,7 +21,6 @@ add_executable(	roguelike
 
 		armour.h
 		buff.h
-		character.cpp
 		character.h
 		display.h
 		effect.h
@@ -32,7 +31,6 @@ add_executable(	roguelike
 		misc.h
 		race.h
 		resistance.h
-		shield.cpp
 		shield.h
 		weapon.h
 

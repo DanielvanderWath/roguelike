@@ -8,6 +8,7 @@
 #include "buff.h"
 #include "floor.h"
 #include <list>
+#include <string>
 
 class Armour;
 class Item;
@@ -33,7 +34,7 @@ private:
 	FloorTile *position;
 	Resistance resistance;
 	int armourSpecial;
-	char *name;
+	string name;
 	char appearance;
 	Gender gender;
 	Race *race;
@@ -45,7 +46,7 @@ private:
 public:
 	Character(void);
 	~Character(void);
-	Character(const char *n, Race *r, Gender g);
+	Character(std::string *n, Race *r, Gender g);
 	void dumpStats(int indent);
 	void listInventory(void);
 	void giveInventory(list<Item*> *target);
@@ -62,7 +63,7 @@ public:
 	void removeAllBuffs(void);
 	void moveTo(FloorTile *tile);
 	FloorTile* getPosition(void);
-	const char* getName(void);
+	std::string getName(void);
 	char getAppearance(void);
 	int getAV(void);
 	int getXP(void);

@@ -14,6 +14,7 @@ protected:
 	static int bufferSize;
 	static int iWinWidth, iWinHeight;
 	static bool bUserInputSinceLastMessage;
+	static bool bAskingPlayer;
 public:
 	Display(void);
 	~Display(void);
@@ -26,7 +27,9 @@ public:
 	static void waitForKey(int key);
 	static void output(std::string str);
 	static void setUserInputTrue(void);
+	static void setUserInputFalse(void);
 	static void dialogue(std::string str, const char *choices);
+	static std::string* askUserForString(std::string strQuestion);
 };
 
 #endif

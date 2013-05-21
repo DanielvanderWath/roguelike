@@ -7,9 +7,20 @@
 
 Character* Game::createPlayer(void)
 {
+	Character *pCNewCharacter;
+	std::string *pstrName;
+
 	OUTPUT("Welcome traveller!");
+	pstrName = ASK("What is your name?");
+
 	Race *tempRace = new Race("Temp", 28, 4, 8, 4);
-	return new Character("Temp", tempRace, MALE);
+
+	pCNewCharacter = new Character(pstrName, tempRace, MALE);
+
+	//this lives on the heap
+	delete pstrName;
+
+	return pCNewCharacter;
 }
 
 void Game::init(void)

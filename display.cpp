@@ -3,6 +3,7 @@
 int Display::bufferSize=0;//static, need to allocate storage somewhere
 int Display::iWinWidth=0, Display::iWinHeight=0;
 bool Display::bUserInputSinceLastMessage = false;
+bool Display::bAskingPlayer = false;
 
 Display::Display(void)
 {
@@ -119,6 +120,7 @@ void Display::output(std::string str)
 {
 	int width, height;
 	static list<std::string> buffer(bufferSize, "");
+	int i = bAskingPlayer ? 1 : 0;
 
 	if(bufferSize == 0)
 	{
@@ -132,7 +134,7 @@ void Display::output(std::string str)
 	getmaxyx(stdscr, height, width);
 
 	list<std::string>::iterator it=buffer.begin();
-	for(int i = 0; i < buffer.size(); i++)
+	for(i; i < buffer.size(); i++)
 	{
 		move(height-1 - i, 0);
 		clrtoeol();
@@ -140,8 +142,18 @@ void Display::output(std::string str)
 	}
 
 	refresh();
+
 	if(!bUserInputSinceLastMessage)
+	{
 		waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
+	}
+
+	if(bAskingPlayer)
+	{
+		move(height - 1, 0);
+		clrtoeol();
+		bAskingPlayer = false;
+	}
 
 	bUserInputSinceLastMessage = false;
 }
@@ -151,9 +163,53 @@ void Display::setUserInputTrue(void)
 	bUserInputSinceLastMessage = true;
 }
 
+void Display::setUserInputFalse(void)
+{
+	bUserInputSinceLastMessage = false;
+}
+
 void Display::dialogue(std::string str, const char *choices)
 {
 	OUTPUT(str);
+}
+
+// *** ask user a question, get a string back ***
+std::string* Display::askUserForString(std::string strQuestion)
+{
+	std::string *pstrAnswer = new std::string;
+	char cKey = 'x';
+	int width, height;
+
+	//make sure output won't wait for a keypress before returning
+	bUserInputSinceLastMessage = true;
+	bAskingPlayer = true;
+
+	//print out the question
+	output(strQuestion);
+
+	//put the cursor at the end of the question. output prints the message log from bottom to top, and we want to be at the bottom
+	getmaxyx(stdscr, height, width);
+
+	move(height - 1, 0);
+
+	//get the player's response. Turn on echoing
+	echo();
+	while(true)
+	{
+		cKey = getch();
+
+		if(cKey == '\n')
+			break;
+
+		pstrAnswer->push_back(cKey);
+	}
+	noecho();
+
+	//Add the answer to the message buffer
+	bUserInputSinceLastMessage = true;
+	output(*pstrAnswer);
+
+	return pstrAnswer;
 }
 
 

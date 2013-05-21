@@ -29,14 +29,13 @@ Character::~Character(void)
 	{
 		removeAllBuffs();
 	}
-
-	delete name;
 }
 
-Character::Character(const char *n, Race *r, Gender g)
+Character::Character(std::string *n, Race *r, Gender g)
 {
-	name = new char[strlen(n)+1];
-	strcpy(name, n);
+	name = *n;
+
+	OUTPUT("name = " << name << endl);
 
 	gender = g;
 
@@ -382,9 +381,9 @@ FloorTile* Character::getPosition(void)
 }
 
 // *** return a char array containing the Character's name ***
-const char* Character::getName(void)
+std::string Character::getName(void)
 {
-	return (const char*) name;
+	return name;
 }
 
 // *** return the char used to represent the Character when drawing it ***
