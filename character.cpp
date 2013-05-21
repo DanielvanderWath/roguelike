@@ -398,6 +398,18 @@ int Character::getAV(void)
 	return AV;
 }
 
+// *** return the Character's current hp ***
+int Character::getHP(void)
+{
+	return hp;
+}
+
+// *** return the Character's max hp ***
+int Character::getHPMax(void)
+{
+	return hpmax;
+}
+
 // *** return the Character's current XP count ***
 int Character::getXP(void)
 {

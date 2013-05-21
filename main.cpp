@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 #define MAP_WIDTH 60
-#define MAP_HEIGHT 30
+#define MAP_HEIGHT 17
 
 Character* Game::createPlayer(void)
 {
@@ -13,7 +13,7 @@ Character* Game::createPlayer(void)
 	OUTPUT("Welcome traveller!");
 	pstrName = ASK("What is your name?");
 
-	Race *tempRace = new Race("Temp", 28, 4, 8, 4);
+	Race *tempRace = new Race("Human", 28, 4, 8, 4);
 
 	pCNewCharacter = new Character(pstrName, tempRace, MALE);
 
@@ -28,14 +28,14 @@ void Game::init(void)
 	//seed random
 	srand(time(0));
 
+	pc = createPlayer();
+
 	//create a map
 	floor = new Floor(MAP_WIDTH, MAP_HEIGHT);
 	floor->generate();
 
 	display.setBufferSize(display.getWindowHeight() - MAP_HEIGHT);
 
-	//temp race
-	pc = createPlayer();
 	pc->moveTo(floor->getTile(MAP_WIDTH/2, MAP_HEIGHT/2));
 }
 
@@ -44,50 +44,6 @@ bool Game::moveCharacter(Character *c, DIRECTION dir)
 {
 	FloorTile *old = c->getPosition();
 	FloorTile *next = floor->getTile(old, dir);
-
-#if 0
-	switch(dir)
-	{
-		case DIRECTION_WEST:
-		{
-			//if we're at the left wall
-			if(old->getX() == 0)
-				pc->bump();
-			else
-				next = floor->getTile(old->getX() - 1, old->getY());
-			break;
-		}
-		case DIRECTION_NORTH:
-		{
-			//if we're at the top wall
-			if(old->getY() == 0)
-				pc->bump();
-			else
-				next = floor->getTile(old->getX(), old->getY() - 1);
-			break;
-		}
-		case DIRECTION_SOUTH:
-		{
-			//if we're at the bottom wall
-			if(old->getY() == floor->getBottom())
-				pc->bump();
-			else
-				next = floor->getTile(old->getX(), old->getY() + 1);
-			break;
-		}
-		case DIRECTION_EAST:
-		{
-			//if we're at the right-hand wall
-			if(old->getX() == floor->getRight())
-				pc->bump();
-			else
-				next = floor->getTile(old->getX() + 1, old->getY());
-			break;
-		}
-		default:
-			OUTPUT("INVALID DIRECTION SPECIFIED 0x" << hex << dir << endl);
-	}
-#endif
 
 	//if next is still NULL then we were unable to move
 	if(next)
@@ -198,6 +154,7 @@ void Game::mainLoop(void)
 	while(!quit)
 	{
 		display.drawMap(getFloor());
+		display.drawHUD(pc, getFloor()->getWidth());
 		doActionFromUser();
 		display.setUserInputTrue();
 	}

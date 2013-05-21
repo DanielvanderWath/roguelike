@@ -66,6 +66,8 @@ public:
 	std::string getName(void);
 	char getAppearance(void);
 	int getAV(void);
+	int getHP(void);
+	int getHPMax(void);
 	int getXP(void);
 	void addXP(int _xp);
 	int getXPValue(void);
@@ -75,7 +77,6 @@ public:
 	Hand* getRightHand(void);
 	bool isDead(void);
 	void bump(void);
-	
 };
 
 

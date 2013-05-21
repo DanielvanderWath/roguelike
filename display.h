@@ -15,11 +15,12 @@ protected:
 	static int iWinWidth, iWinHeight;
 	static bool bUserInputSinceLastMessage;
 	static bool bAskingPlayer;
+	static bool bMessageFillWindow;
 public:
 	Display(void);
 	~Display(void);
 	static void drawMap(Floor *floor);
-	static void drawHUD(Character *pc);
+	static void drawHUD(Character *pc, int iLeft);
 	static char getAppearance(FloorTile *tile);
 	static int getBufferSize(void);
 	static int getWindowHeight(void);

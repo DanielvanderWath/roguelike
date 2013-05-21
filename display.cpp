@@ -4,6 +4,7 @@ int Display::bufferSize=0;//static, need to allocate storage somewhere
 int Display::iWinWidth=0, Display::iWinHeight=0;
 bool Display::bUserInputSinceLastMessage = false;
 bool Display::bAskingPlayer = false;
+bool Display::bMessageFillWindow = true;//if there isn't a floor, the message buffer can fill the whole window
 
 Display::Display(void)
 {
@@ -32,6 +33,7 @@ void Display::drawMap(Floor *floor)
 	floorHeight = floor->getHeight();
 
 	setBufferSize(winHeight - floorHeight);
+	bMessageFillWindow = false;
 
 	if( floorWidth <= winWidth && floorHeight <= winHeight)
 	{
@@ -51,9 +53,42 @@ void Display::drawMap(Floor *floor)
 
 }
 
-void Display::drawHUD(Character *pc)
-{
+#define HUDLINE(Y, X, H, T) \
+	mvprintw(Y, X, T); \
+	if(++Y >= H) \
+	{ \
+		return; \
+	} 
 
+// *** draw the pc's HUD ***
+void Display::drawHUD(Character *pc, int iLeft)
+{
+	int iWidth, iHeight, iCursorY;
+
+	getmaxyx(stdscr, iHeight, iWidth);
+
+	iWidth = iWidth - iLeft;
+
+	if(iWidth < 1)
+	{
+		OUTPUT("ERROR: trying to draw HUD outside of window" << endl);
+		return;
+	}
+
+	iCursorY = 1;
+
+	mvprintw(iCursorY++, iLeft, "Name: %s", pc->getName().c_str());
+	if(iCursorY >= iHeight)
+		return;
+	mvprintw(iCursorY++, iLeft, "HP: %d/%d", pc->getHP(), pc->getHPMax());
+	if(iCursorY >= iHeight)
+		return;
+	mvprintw(iCursorY++, iLeft, "AV: %d", pc->getAV());
+	if(iCursorY >= iHeight)
+		return;
+	mvprintw(iCursorY++, iLeft, "XP: %d", pc->getXP());
+	if(iCursorY >= iHeight)
+		return;
 }
 
 char Display::getAppearance(FloorTile *tile)
@@ -121,6 +156,13 @@ void Display::output(std::string str)
 	int width, height;
 	static list<std::string> buffer(bufferSize, "");
 	int i = bAskingPlayer ? 1 : 0;
+	
+	getmaxyx(stdscr, height, width);
+
+	if(bMessageFillWindow)
+	{
+		bufferSize = height;
+	}
 
 	if(bufferSize == 0)
 	{
@@ -128,10 +170,13 @@ void Display::output(std::string str)
 		return;
 	}
 
+	if(bufferSize != buffer.size())
+	{
+		buffer.resize(bufferSize);
+	}
+
 	buffer.pop_back();
 	buffer.push_front(std::string(str));
-	
-	getmaxyx(stdscr, height, width);
 
 	list<std::string>::iterator it=buffer.begin();
 	for(i; i < buffer.size(); i++)
