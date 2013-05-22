@@ -1,6 +1,7 @@
 #ifndef __ITEM_H__
 #define __ITEM_H__
 #include <list>
+#include <string>
 #include "buff.h"
 
 using namespace std;
@@ -14,7 +15,7 @@ using namespace std;
 class Item
 {
 protected:
-	char *name;
+	std::string name;
 	char icon;
 	int slot; //slot 0 is the character's inventory. Everything else is character specific
 	list<int> allowed_slots;
@@ -28,7 +29,7 @@ public:
 	char getAppearance(void);
 	void setSlot(int s);
 	bool isAllowedInSlot(int _slot);
-	const char* getName(void);
+	std::string* getName(void);
 };
 
 #endif

@@ -29,7 +29,7 @@ public:
 	static void output(std::string str);
 	static void setUserInputTrue(void);
 	static void setUserInputFalse(void);
-	static void dialogue(std::string str, const char *choices);
+	static int dialogue(std::string str, std::list<std::string*> *lChoices);
 	static std::string* askUserForString(std::string strQuestion);
 };
 

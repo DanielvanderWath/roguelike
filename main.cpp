@@ -37,6 +37,13 @@ void Game::init(void)
 	display.setBufferSize(display.getWindowHeight() - MAP_HEIGHT);
 
 	pc->moveTo(floor->getTile(MAP_WIDTH/2, MAP_HEIGHT/2));
+
+	//put some items on the floor. TODO: get rid of this
+	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
+	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
+	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
+	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
+	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
 }
 
 // *** try to move character to the adjacent space in the given direction. return true if it moved, false otherwise ***
@@ -55,6 +62,45 @@ bool Game::moveCharacter(Character *c, DIRECTION dir)
 	{
 		pc->bump();
 		return false;
+	}
+}
+
+// *** allow the character to pick up items chosen through a dialogue presented to the player. Pass a greater-than-zero value in maxAllowed to limit the number of items the player is allowed to take ***
+void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
+{
+	bool bFinished = false, bUnlimited = maxAllowed > 0 ? false : true;
+	list<std::string*> itemNames;
+	int selection;
+
+	while(!bFinished)
+	{
+		//build a list of item names. This is done every iteration, so that the list the player sees is always correct
+		for(list<Item*>::iterator it = items->begin(); it != items->end(); it++)
+		{
+			itemNames.push_back((*it)->getName());
+		}
+
+		selection = Display::dialogue(std::string("What would you like to pick up?"), &itemNames);
+		if(selection < 0)
+		{
+			bFinished = true;
+		}
+		else
+		{
+			list<Item*>::iterator it = items->begin();
+			for(int i = 0; it != items->end(); i++, it++)
+			{
+				if(i == selection)
+				{
+					c->pickUp(*it);
+					it = items->erase(it);
+					break;
+				}
+			}
+		}
+
+		//clear the list so it can be refilled without any removed items on the next iteration
+		itemNames.clear();
 	}
 }
 
@@ -116,6 +162,22 @@ void Game::doActionFromUser(void)
 				{
 					OUTPUT(key << "is not a valid argument for extended walk" << endl);
 				}
+				break;
+			case 'i':
+				//go to inventory screen. for now just list inventory
+				pc->listInventory();
+				break;
+			case ';':
+				//pick up items from floor
+				if(pc->getPosition())
+				{
+					pickUpItems(pc, pc->getPosition()->getInventory(), 0);
+				}
+				else
+				{
+					//if the pc isn't standing on a tile for some reason fail silently
+				}
+				break;
 			default:
 				break;//do nothing on unrecognised key
 		}
@@ -142,6 +204,34 @@ void Game::kill(Character *killer, Character **killed)
 	killer->addXP((*killed)->getXPValue());
 	delete *killed;
 	(*killed) = NULL;
+}
+
+// *** spawn an item on a floor tile ***
+void Game::spawnItem(FloorTile *tile)
+{
+	static int i =0;//TODO REWRITE THIS WHOLE FUNCTION
+
+	switch(i)
+	{
+		case 0:
+			tile->dropItem(new Armour("Lazarus Suit", 4, 3, NULL, NULL, list<int>(1, SLOT_TORSO)));
+			break;
+		case 1:
+			tile->dropItem(new Weapon("Massive sledgehammer", 8, 6, 2, 4, false));
+			break;
+		case 2:
+			tile->dropItem(new Weapon("Assassin's blade", 3, 2, 2, 2, true));
+			break;
+		case 3:
+			tile->dropItem(new Shield("Bronze Aspis", 3, 2, NULL, 0, 5));
+			break;
+		case 4:
+			tile->dropItem(new Weapon("Pointy stick", 2, 2, 2, 2, true));
+			break;
+		default:
+			break;
+	}
+	i++;
 }
 
 Floor* Game::getFloor(void)

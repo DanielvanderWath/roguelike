@@ -213,9 +213,62 @@ void Display::setUserInputFalse(void)
 	bUserInputSinceLastMessage = false;
 }
 
-void Display::dialogue(std::string str, const char *choices)
+// *** present the player with a question and a list of potential answers ***
+int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices)
 {
-	OUTPUT(str);
+	int iChoice=0, iKey=0, iSelection=0;
+	char cZero='a', cChoice=cZero, cMore, cFinish;
+	bool bFinished = false;
+	std::list<std::string*>::iterator it = lChoices->begin();
+
+	while(!bFinished)
+	{
+		//ask the question
+		OUTPUT(strQuestion);
+
+		while(cChoice + 3 - 'a' < bufferSize && it != lChoices->end())
+		{
+			bUserInputSinceLastMessage = true;
+			OUTPUT(cChoice++ << ") " << *(*it++));
+		}
+
+		//if we haven't reached the end of the list, then we've filled the buffer, so offer to print out another page
+		bUserInputSinceLastMessage = true;
+		cMore = cChoice - cZero;
+		OUTPUT(cChoice++ << ") see more");
+
+		bUserInputSinceLastMessage = true;
+		cFinish = cChoice - cZero;
+		OUTPUT(cChoice << ") finished");
+
+		//reset cChoice
+		cChoice = cZero;
+
+		//get the player's choice
+		iKey = getch();	
+		iSelection = iKey - cChoice;
+		if(iSelection < cMore & iSelection >= 0)
+		{
+			//they chose an option from the list on screen
+			iChoice += iSelection;
+			bFinished = true;
+		}
+		else if(iSelection == cFinish)
+		{
+			bFinished = true;
+			iChoice = -1;
+		}
+		else if(iSelection == cMore)
+		{
+			//they want to see more
+			iChoice+= bufferSize -1;
+		}
+		else
+		{
+			//they made an invalid choice
+		}
+	}
+	return iChoice;
 }
 
 // *** ask user a question, get a string back ***

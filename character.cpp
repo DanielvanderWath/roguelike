@@ -87,7 +87,7 @@ void Character::listInventory(void)
 		OUTPUT(name << " has the following items in " << possessive_pronoun[gender] << " inventory:");
 
 		for(list<Item*>::iterator it=inventory.begin(); it != inventory.end(); it++)
-			OUTPUTI((*it)->getName(), 1);
+			OUTPUTI(*(*it)->getName(), 1);
 	}
 	else
 		OUTPUT(name << " has nothing in " << possessive_pronoun[gender] << " inventory.");
@@ -260,6 +260,7 @@ bool Character::attackBasic(Character *target)
 	else
 	{
 		//TODO: decide what to do when attacking without a weapon
+		OUTPUT("TODO: nothing happens when you attack without a weapon" << endl);
 	}
 
 	//tell the caller if we scored a critical hit
@@ -312,7 +313,7 @@ void Character::pickUp(Item* item)
 	if(item)
 	{
 		inventory.push_back(item);
-		OUTPUT(name << " picked up the " << item->getName() );
+		OUTPUT(name << " picked up the " << *(item->getName()) );
 	}
 }
 

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Item::Item(void){slot=0; name=NULL; icon=' ';}
+Item::Item(void){slot=0; name=""; icon=' ';}
 Item::~Item(void){}
 
 void Item::dumpStats(void)
@@ -40,8 +40,8 @@ bool Item::isAllowedInSlot(int _slot)
 	return false;
 }
 
-const char* Item::getName(void)
+std::string* Item::getName(void)
 {
-	return name;
+	return &name;
 }
 

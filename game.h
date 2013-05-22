@@ -27,6 +27,8 @@ public:
 	void doActionFromUser(void);
 	void kill(Character *killer, Character **killed);
 	bool moveCharacter(Character *c, DIRECTION dir);
+	void pickUpItems(Character *c, list<Item*>* items, int maxAllowed);
+	void spawnItem(FloorTile *tile);
 	Floor *getFloor(void);
 	void mainLoop(void);
 };

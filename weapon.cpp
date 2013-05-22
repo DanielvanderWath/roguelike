@@ -5,14 +5,14 @@
 
 using namespace std;
 
-Weapon::Weapon(void){name = NULL;}
-Weapon::~Weapon(void){if(name) delete name;}
+Weapon::Weapon(void){name = "";}
+Weapon::~Weapon(void){}
 
-Weapon::Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, bool one)
+Weapon::Weapon(std::string n, int dmin, int dminvar, int dvar, int dvarvar, bool one)
 {
 	//TODO: error check
-	name = new char[strlen(n)+1];
-	strcpy(name, n);
+	name = n;
+	
 
 	damage_min = dmin + (rand() % dminvar);
 	damage_var = dvar + (rand() % dvarvar);

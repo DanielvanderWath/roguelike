@@ -23,7 +23,7 @@ private:
 public:
 	Weapon(void);
 	~Weapon(void);
-	Weapon(const char *n, int dmin, int dminvar, int dvar, int dvarvar, bool one);
+	Weapon(std::string n, int dmin, int dminvar, int dvar, int dvarvar, bool one);
 	void dumpSpecials(int s, int indent);
 	void dumpStats(int indent);
 	bool attack(Character *target, bool offHand);

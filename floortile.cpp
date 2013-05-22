@@ -36,6 +36,11 @@ std::list<Item*>* FloorTile::getInventory(void)
 	return &inventory;
 }
 
+void FloorTile::dropItem(Item* item)
+{
+	inventory.push_back(item);
+}
+
 bool FloorTile::occupy(Character* _occupier)
 {
 	//fail if already occupied

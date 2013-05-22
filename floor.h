@@ -19,6 +19,7 @@ public:
 	FloorTile(int _x, int _y);
 	void dumpInventory(void);
 	std::list<Item*>* getInventory(void);
+	void dropItem(Item *item);
 	bool occupy(Character* _occupier);
 	void leave(void);
 	bool isOccupied(void);

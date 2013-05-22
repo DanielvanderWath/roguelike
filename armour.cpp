@@ -8,11 +8,10 @@ using namespace std;
 
 Armour::Armour(void){}
 Armour::~Armour(void){}
-Armour::Armour(const char *n, int av_min, int av_var, Resistance *_resistance,  list<Buff*> *_buffs, list<int> _allowed_slots)
+Armour::Armour(std::string n, int av_min, int av_var, Resistance *_resistance,  list<Buff*> *_buffs, list<int> _allowed_slots)
 {
 	//TODO: error check
-	name = new char[strlen(n)+1];
-	strcpy(name, n);
+	name = n;
 
 	AV = av_min + (rand() % ++av_var);
 	if(_resistance)
