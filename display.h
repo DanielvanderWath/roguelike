@@ -26,6 +26,7 @@ public:
 	static int getWindowHeight(void);
 	static void setBufferSize(int size);
 	static void waitForKey(int key);
+	static void clearMessageBuffer(void);
 	static void output(std::string str);
 	static void setUserInputTrue(void);
 	static void setUserInputFalse(void);

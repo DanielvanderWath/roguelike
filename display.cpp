@@ -149,19 +149,26 @@ void Display::waitForKey(int key)
 	while(getch() != key){}
 }
 
-//void Display::output_common
+void Display::clearMessageBuffer(void)
+{
+	for(int i = 0; i < bufferSize; i++)
+	{
+		bUserInputSinceLastMessage = true;
+		OUTPUT("");
+	}
+}
 
 void Display::output(std::string str)
 {
-	int width, height;
+	int iWidth, iHeight;
 	static list<std::string> buffer(bufferSize, "");
 	int i = bAskingPlayer ? 1 : 0;
 	
-	getmaxyx(stdscr, height, width);
+	getmaxyx(stdscr, iHeight, iWidth);
 
 	if(bMessageFillWindow)
 	{
-		bufferSize = height;
+		bufferSize = iHeight;
 	}
 
 	if(bufferSize == 0)
@@ -181,21 +188,27 @@ void Display::output(std::string str)
 	list<std::string>::iterator it=buffer.begin();
 	for(i; i < buffer.size(); i++)
 	{
-		move(height-1 - i, 0);
+		move(iHeight-1 - i, 0);
 		clrtoeol();
-		mvprintw(height-1 - i, 0, (*it++).c_str());
+		mvprintw(iHeight-1 - i, 0, (*it++).c_str());
 	}
 
 	refresh();
 
 	if(!bUserInputSinceLastMessage)
 	{
+		std::string strPressSpacebar = "(Space)";
+		mvprintw(iHeight - 1, iWidth - strPressSpacebar.length(), strPressSpacebar.c_str());
+
 		waitForKey(' ');//spacebar, I can't find it in curses.h for some reason
+
+		move(iHeight - 1, iWidth - strPressSpacebar.length());
+		clrtoeol();
 	}
 
 	if(bAskingPlayer)
 	{
-		move(height - 1, 0);
+		move(iHeight - 1, 0);
 		clrtoeol();
 		bAskingPlayer = false;
 	}
@@ -255,6 +268,8 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 		}
 		else if(iSelection == cFinish)
 		{
+			//they've finished
+			clearMessageBuffer();
 			bFinished = true;
 			iChoice = -1;
 		}
