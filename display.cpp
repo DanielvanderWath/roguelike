@@ -311,10 +311,21 @@ std::string* Display::askUserForString(std::string strQuestion)
 	{
 		cKey = getch();
 
-		if(cKey == '\n')
-			break;
+		//only accept alphanumeric characters and spaces
+		if(	(cKey >= 'a' && cKey <= 'z') ||
+			(cKey >= 'A' && cKey <= 'Z') ||
+			(cKey >= '1' && cKey <= '0') ||
+			(cKey == ' ') || (cKey == '\n'))
+		{
+			if(cKey == '\n')
+				break;
 
-		pstrAnswer->push_back(cKey);
+			pstrAnswer->push_back(cKey);
+		}
+		else
+		{
+			continue;
+		}
 	}
 	noecho();
 
