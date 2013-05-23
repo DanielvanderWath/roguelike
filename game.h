@@ -24,6 +24,7 @@ public:
 	void init(void);
 	Character *createPlayer(void);
 	DIRECTION getDirectionFromKey(int key);
+	void equipItemFromInventory(void);
 	void doActionFromUser(void);
 	void kill(Character *killer, Character **killed);
 	bool moveCharacter(Character *c, DIRECTION dir);

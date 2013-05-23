@@ -9,6 +9,7 @@ using namespace std;
 //these are used to tell the item which slot it is in
 #define SLOT_INVENTORY 0
 #define SLOT_TORSO 1
+#define SLOT_FIRST SLOT_TORSO
 #define SLOT_HAND_LEFT 2
 #define SLOT_HAND_RIGHT 3
 
@@ -21,6 +22,8 @@ protected:
 	list<int> allowed_slots;
 	list<Buff*> buffs;
 public:
+	static std::string astrSlotNames[];
+
 	Item(void);
 	virtual ~Item(void);
 	virtual void dumpStats(void);

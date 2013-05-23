@@ -2,7 +2,11 @@
 #include "game.h"
 #include <iostream>
 
-using namespace std;
+std::string Item::astrSlotNames[] = {	"Inventory",
+						"Torso",
+						"Left Hand",
+						"Right Hand",
+						};
 
 Item::Item(void){slot=0; name=""; icon=' ';}
 Item::~Item(void){}

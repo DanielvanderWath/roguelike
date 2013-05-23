@@ -31,6 +31,9 @@ enum DIRECTION
 #define ASK(X) \
 		Display::askUserForString(X)
 
+#define DIALOGUE(X, Y) \
+		Display::dialogue(std::string(X), &Y)
+
 #define CLAMP(low, X, high) (low > X ? low : high < X ? high : X)
 
 

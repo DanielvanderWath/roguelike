@@ -80,7 +80,7 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 			itemNames.push_back((*it)->getName());
 		}
 
-		selection = Display::dialogue(std::string("What would you like to pick up?"), &itemNames);
+		selection = DIALOGUE("What would you like to pick up?", itemNames);
 		if(selection < 0)
 		{
 			bFinished = true;
@@ -125,6 +125,74 @@ DIRECTION Game::getDirectionFromKey(int key)
 	}
 }
 
+// *** allow the character to equip items from their inventory, chosen through a dialogue presented to the player. ***
+void Game::equipItemFromInventory(void)
+{
+	list<std::string*> slotNames, itemNames;
+	list<Item*> items;
+	int iSlot, iItem;
+	bool bFinished = false;
+
+	//create a list of pointers to the slot names. probably move this to Character at some point
+	slotNames.push_back(&Item::astrSlotNames[SLOT_TORSO]);
+	slotNames.push_back(&Item::astrSlotNames[SLOT_HAND_LEFT]);
+	slotNames.push_back(&Item::astrSlotNames[SLOT_HAND_RIGHT]);
+
+	while(!bFinished)
+	{
+		iSlot = DIALOGUE("Where would you like to equip an item?", slotNames) + SLOT_FIRST;
+
+		if(iSlot < 0)
+		{
+			//they've changed their mind
+			bFinished = true;
+		}
+		else
+		{
+			for(list<Item*>::iterator it = pc->getInventory()->begin(); it != pc->getInventory()->end(); it++)
+			{
+				//create a list of items allowed in this slot
+				if((*it)->isAllowedInSlot(iSlot))
+				{
+					itemNames.push_back((*it)->getName());
+					items.push_back((*it));
+				}
+			}
+
+			//if the player has nothing to equip, tell them and exit
+			if(itemNames.empty())
+			{
+				OUTPUT("You don't have anything to put there");
+				break;
+			}
+
+			//if they do, present them with the choices
+			iItem = DIALOGUE("What do you want to equip?", itemNames);
+
+			if(iItem < 0)
+			{
+				//unequip the item
+				pc->unequip(iSlot);
+			}
+			else
+			{
+				//equip the item they chose
+				list<Item*>::iterator it = items.begin();
+				for(int i = 0; it != items.end(); i++, it++)
+				{
+					if(i == iItem)
+					{
+						pc->equip(*it, iSlot);
+						break;
+					}
+				}
+				
+			}
+			bFinished = true;
+		}
+	}
+}
+
 void Game::doActionFromUser(void)
 {
 	int key = getch();
@@ -162,6 +230,10 @@ void Game::doActionFromUser(void)
 				{
 					OUTPUT(key << "is not a valid argument for extended walk" << endl);
 				}
+				break;
+			case 'e':
+				//equip an item from the player's inventory
+				equipItemFromInventory();
 				break;
 			case 'i':
 				//go to inventory screen. for now just list inventory

@@ -93,6 +93,16 @@ void Character::listInventory(void)
 		OUTPUT(name << " has nothing in " << possessive_pronoun[gender] << " inventory.");
 }
 
+// *** post unequip housekeeping ***
+void Character::unequip_post(Item *a)
+{
+	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
+	a->setSlot(0);//remove the reference to the equipment slot from the item
+	calcDefence();//recalculate defensive stats after unequipping an item
+	OUTPUT( name << " unequipped " << *a->getName());
+}
+
+// *** unequip an item ***
 void Character::unequip(Item *a)
 {
 	if(!a)
@@ -118,10 +128,36 @@ void Character::unequip(Item *a)
 			OUTPUT("Error: trying to unequip item from invalid slot");
 			return;
 	}
-	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
-	a->setSlot(0);//remove the reference to the equipment slot from the item
-	calcDefence();//recalculate defensive stats after unequipping an item
-	OUTPUT( name << " unequipped " << a->getName());
+	unequip_post(a);
+}
+
+// *** unquip item in slot ***
+void Character::unequip(int iSlot)
+{
+	Item *a = NULL;
+
+	switch(iSlot)
+	{
+		case SLOT_TORSO:
+			if(torso)
+				a = torso;
+			torso = NULL;
+			break;
+		case SLOT_HAND_LEFT:
+			if(left)
+				a = left;
+			left = NULL;
+			break;
+		case SLOT_HAND_RIGHT:
+			if(right)
+				a = right;
+			right = NULL;
+			break;
+		default:
+			OUTPUT("Error: invalid slot " <<  iSlot);
+			return;
+	}
+	unequip_post(a);
 }
 
 void Character::giveInventory(list<Item*> *target)
@@ -136,6 +172,11 @@ void Character::giveInventory(list<Item*> *target)
 		target->push_back(inventory.front());
 		inventory.pop_front();
 	}
+}
+
+list<Item*>* Character::getInventory(void)
+{
+	return &inventory;
 }
 
 void Character::equip(Item *a, int slot)

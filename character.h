@@ -43,6 +43,8 @@ private:
 	Hand *left, *right;
 	list<Item*> inventory;
 	list<Buff*> buffs;
+
+	void unequip_post(Item *a);
 public:
 	Character(void);
 	~Character(void);
@@ -50,8 +52,10 @@ public:
 	void dumpStats(int indent);
 	void listInventory(void);
 	void giveInventory(list<Item*> *target);
+	list<Item*>* getInventory(void);
 	void equip(Item *a, int slot);
 	void unequip(Item *a);
+	void unequip(int iSlot);
 	void calcDefence(void);
 	bool attackBasic(Character *target);
 	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else

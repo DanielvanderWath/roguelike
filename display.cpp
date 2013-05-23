@@ -75,6 +75,13 @@ void Display::drawHUD(Character *pc, int iLeft)
 		return;
 	}
 
+
+	//clear the hud, in case any strings in this frame are shorter than they were last frame
+	for(iCursorY = 1; iCursorY < iHeight; iCursorY++)
+	{
+		move(iCursorY, iLeft);
+		clrtoeol();
+	}
 	iCursorY = 1;
 
 	mvprintw(iCursorY++, iLeft, "Name: %s", pc->getName().c_str());
@@ -89,6 +96,28 @@ void Display::drawHUD(Character *pc, int iLeft)
 	mvprintw(iCursorY++, iLeft, "XP: %d", pc->getXP());
 	if(iCursorY >= iHeight)
 		return;
+
+	//empty line
+	iCursorY++;
+
+	if(pc->getTorso())
+	{
+		mvprintw(iCursorY++, iLeft, "Armour: %s", pc->getTorso()->getName()->c_str());
+		if(iCursorY >= iHeight)
+			return;
+	}
+	if(pc->getRightHand())
+	{
+		mvprintw(iCursorY++, iLeft, "Right Hand: %s", pc->getRightHand()->getName()->c_str());
+		if(iCursorY >= iHeight)
+			return;
+	}
+	if(pc->getLeftHand())
+	{
+		mvprintw(iCursorY++, iLeft, "Left Hand: %s", pc->getLeftHand()->getName()->c_str());
+		if(iCursorY >= iHeight)
+			return;
+	}
 }
 
 char Display::getAppearance(FloorTile *tile)
