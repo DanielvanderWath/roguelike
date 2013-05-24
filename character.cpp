@@ -117,11 +117,11 @@ void Character::unequip(Item *a)
 			torso = NULL;		
 			break;
 		case SLOT_HAND_LEFT:
-			dynamic_cast<Weapon*>(left)->setWielder(NULL);
+			dynamic_cast<Hand*>(left)->setWielder(NULL);
 			left = NULL;
 			break;
 		case SLOT_HAND_RIGHT:
-			dynamic_cast<Weapon*>(right)->setWielder(NULL);
+			dynamic_cast<Hand*>(right)->setWielder(NULL);
 			right = NULL;
 			break;
 		default:
