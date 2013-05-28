@@ -84,7 +84,7 @@ void Display::drawHUD(Character *pc, int iLeft)
 	}
 	iCursorY = 1;
 
-	mvprintw(iCursorY++, iLeft, "Name: %s", pc->getName().c_str());
+	mvprintw(iCursorY++, iLeft, std::string("Name: " + pc->getName()).substr(0, iWidth).c_str());
 	if(iCursorY >= iHeight)
 		return;
 	mvprintw(iCursorY++, iLeft, "HP: %d/%d", pc->getHP(), pc->getHPMax());
@@ -102,19 +102,19 @@ void Display::drawHUD(Character *pc, int iLeft)
 
 	if(pc->getTorso())
 	{
-		mvprintw(iCursorY++, iLeft, "Armour: %s", pc->getTorso()->getName()->c_str());
+		mvprintw(iCursorY++, iLeft, std::string("Amr: " + *pc->getTorso()->getName()).substr(0, iWidth).c_str());
 		if(iCursorY >= iHeight)
 			return;
 	}
 	if(pc->getRightHand())
 	{
-		mvprintw(iCursorY++, iLeft, "Right Hand: %s", pc->getRightHand()->getName()->c_str());
+		mvprintw(iCursorY++, iLeft, std::string("RH: " + *pc->getRightHand()->getName()).substr(0, iWidth).c_str());
 		if(iCursorY >= iHeight)
 			return;
 	}
 	if(pc->getLeftHand())
 	{
-		mvprintw(iCursorY++, iLeft, "Left Hand: %s", pc->getLeftHand()->getName()->c_str());
+		mvprintw(iCursorY++, iLeft, std::string("LH: " + *pc->getLeftHand()->getName()).substr(0, iWidth).c_str());
 		if(iCursorY >= iHeight)
 			return;
 	}
