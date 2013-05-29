@@ -295,30 +295,36 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 		//reset cChoice
 		cChoice = cZero;
 
-		//get the player's choice
-		iKey = getch();	
-		iSelection = iKey - cZero;
-		if(iSelection < cMore & iSelection >= 0)
+		//get the player's choice, ignore anything other than lower case letters a) to finished)
+		while(true)
 		{
-			//they chose an option from the list on screen
-			iChoice += iSelection;
-			bFinished = true;
-		}
-		else if(iSelection == cFinish)
-		{
-			//they've finished
-			clearMessageBuffer();
-			bFinished = true;
-			iChoice = -1;
-		}
-		else if(iSelection == cMore)
-		{
-			//they want to see more
-			iChoice+= bufferSize - NUM_FLUFF;
-		}
-		else
-		{
-			//they made an invalid choice
+			iKey = getch();	
+			iSelection = iKey - cZero;
+			if(iSelection < cMore & iSelection >= 0)
+			{
+				//they chose an option from the list on screen
+				iChoice += iSelection;
+				bFinished = true;
+				break;
+			}
+			else if(iSelection == cFinish)
+			{
+				//they've finished
+				clearMessageBuffer();
+				bFinished = true;
+				iChoice = -1;
+				break;
+			}
+			else if(iSelection == cMore)
+			{
+				//they want to see more
+				iChoice+= bufferSize - NUM_FLUFF;
+				break;
+			}
+			else
+			{
+				//they made an invalid choice
+			}
 		}
 	}
 	return iChoice;
