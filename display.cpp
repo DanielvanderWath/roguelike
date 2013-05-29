@@ -319,7 +319,7 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 std::string* Display::askUserForString(std::string strQuestion)
 {
 	std::string *pstrAnswer = new std::string;
-	char cKey = 'x';
+	int iKey = 'x';
 	int width, height;
 
 	//make sure output won't wait for a keypress before returning
@@ -338,18 +338,23 @@ std::string* Display::askUserForString(std::string strQuestion)
 	echo();
 	while(true)
 	{
-		cKey = getch();
+		iKey = getch();
 
-		//only accept alphanumeric characters and spaces
-		if(	(cKey >= 'a' && cKey <= 'z') ||
-			(cKey >= 'A' && cKey <= 'Z') ||
-			(cKey >= '1' && cKey <= '0') ||
-			(cKey == ' ') || (cKey == '\n'))
+		if(iKey == KEY_BACKSPACE && pstrAnswer->length() > 0)
 		{
-			if(cKey == '\n')
+			pstrAnswer->erase(pstrAnswer->length() - 1, 1);
+			clrtoeol();
+		}
+		//only accept alphanumeric characters and spaces
+		else if(	(iKey >= 'a' && iKey <= 'z') ||
+				(iKey >= 'A' && iKey <= 'Z') ||
+				(iKey >= '1' && iKey <= '0') ||
+				(iKey == ' ') || (iKey == '\n'))
+		{
+			if(iKey == '\n')
 				break;
 
-			pstrAnswer->push_back(cKey);
+			pstrAnswer->push_back(iKey);
 		}
 		else
 		{
