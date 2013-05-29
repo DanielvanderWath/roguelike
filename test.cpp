@@ -21,7 +21,7 @@ void kill(Character *killer, Character **killed, list<Item*> *lstFloor)
 		OUTPUT((*killed)->getName() << " drops:" );
 		while(!lstDrop.empty())
 		{
-			OUTPUT("\t" << lstDrop.front()->getName() );
+			OUTPUT("\t" << *lstDrop.front()->getName() );
 			lstFloor->push_back(lstDrop.front());
 			lstDrop.pop_front();
 		}

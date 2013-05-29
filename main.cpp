@@ -15,7 +15,7 @@ Character* Game::createPlayer(void)
 
 	Race *tempRace = new Race("Human", 28, 4, 8, 4);
 
-	pCNewCharacter = new Character(pstrName, tempRace, MALE);
+	pCNewCharacter = new Character(*pstrName, tempRace, MALE);
 
 	//this lives on the heap
 	delete pstrName;

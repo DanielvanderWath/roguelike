@@ -48,7 +48,7 @@ private:
 public:
 	Character(void);
 	~Character(void);
-	Character(std::string *n, Race *r, Gender g);
+	Character(std::string n, Race *r, Gender g);
 	void dumpStats(int indent);
 	void listInventory(void);
 	void giveInventory(list<Item*> *target);

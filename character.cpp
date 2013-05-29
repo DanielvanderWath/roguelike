@@ -31,9 +31,9 @@ Character::~Character(void)
 	}
 }
 
-Character::Character(std::string *n, Race *r, Gender g)
+Character::Character(std::string n, Race *r, Gender g)
 {
-	name = *n;
+	name = n;
 
 	OUTPUT("name = " << name << endl);
 
@@ -288,7 +288,7 @@ bool Character::attackBasic(Character *target)
 	if(!bDual)
 	{
 		//attacking with one weapon. TODO: accuracy and dodge
-		OUTPUT( name << " attacks " << target->getName() << " with " << possessive_pronoun[gender] << " " << (bRight ? right : left)->getName());
+		OUTPUT( name << " attacks " << target->getName() << " with " << possessive_pronoun[gender] << " " << *(bRight ? right : left)->getName());
 		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false);
 	}
 	else if(!bNoWeapon)

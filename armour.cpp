@@ -43,7 +43,7 @@ void Armour::dumpBuffs(list<Buff*> s, int indent)
 
 	for(list<Buff*>::iterator it = buffs.begin(); it != buffs.end(); it++)
 	{
-		OUTPUTI((*it)->getName(), indent);
+		OUTPUTI(*(*it)->getName(), indent);
 	}
 
 }
@@ -55,7 +55,7 @@ void Armour::dumpStats(int indent)
 	OUTPUTI("AV:\t" << AV, indent);
 
 	OUTPUTI("Resistances:\n", indent);
-		dumpResistances(resistance, indent);
+		dumpResistances(*resistance, indent);
 
 	if(!buffs.empty())
 	{
