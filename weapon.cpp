@@ -68,4 +68,18 @@ void Weapon::addEffect(Effect *effect)
 	effects.push_back(effect);
 }
 
+// *** return a string, primarily used for describing the item's important stats ***
+std::string* Weapon::getInvString(void)
+{
+	if(strStats.length() == 0)
+	{
+		std::stringstream strStream;
+
+		strStream << name << "(" << damage_min << "-" << damage_min + damage_var << ")";
+		for(list<Effect*>::iterator it=effects.begin(); it != effects.end(); it++)
+			strStream << " " << *(*it)->getInvString();
+		strStats = strStream.str();
+	}
+	return &strStats;
+}
 

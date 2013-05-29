@@ -77,7 +77,7 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 		//build a list of item names. This is done every iteration, so that the list the player sees is always correct
 		for(list<Item*>::iterator it = items->begin(); it != items->end(); it++)
 		{
-			itemNames.push_back((*it)->getName());
+			itemNames.push_back((*it)->getInvString());
 		}
 
 		selection = DIALOGUE("What would you like to pick up?", itemNames);
@@ -154,7 +154,7 @@ void Game::equipItemFromInventory(void)
 				//create a list of items allowed in this slot
 				if((*it)->isAllowedInSlot(iSlot))
 				{
-					itemNames.push_back((*it)->getName());
+					itemNames.push_back((*it)->getInvString());
 					items.push_back((*it));
 				}
 			}
@@ -282,17 +282,20 @@ void Game::kill(Character *killer, Character **killed)
 void Game::spawnItem(FloorTile *tile)
 {
 	static int i =0;//TODO REWRITE THIS WHOLE FUNCTION
+	Weapon* tmp;
 
 	switch(i)
 	{
 		case 0:
-			tile->dropItem(new Armour("Lazarus Suit", 4, 3, NULL, NULL, list<int>(1, SLOT_TORSO)));
+			tile->dropItem(new Armour("Lazarus Suit", 4, 3, new Resistance(5, 5, 5, 5), NULL, list<int>(1, SLOT_TORSO)));
 			break;
 		case 1:
 			tile->dropItem(new Weapon("Massive sledgehammer", 8, 6, 2, 4, false));
 			break;
 		case 2:
-			tile->dropItem(new Weapon("Assassin's blade", 3, 2, 2, 2, true));
+			tmp = new Weapon("Assassin's blade", 3, 2, 2, 2, true);
+			tmp->addEffect(new Effect("Red Viper's Venom", WEAPON_EFFECT_POISON, 3, 5));
+			tile->dropItem(tmp);
 			break;
 		case 3:
 			tile->dropItem(new Shield("Bronze Aspis", 3, 2, NULL, 0, 5));

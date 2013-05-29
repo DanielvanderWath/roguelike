@@ -49,3 +49,8 @@ std::string* Item::getName(void)
 	return &name;
 }
 
+// *** return a string, primarily used for describing the item's important stats ***
+std::string* Item::getInvString(void)
+{
+	return &name;
+}

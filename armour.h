@@ -13,7 +13,7 @@ class Armour : virtual public Item
 {
 protected:
 	int AV;//armour value
-	Resistance resistance;//packed resistances Fire8Ice8Lightning8Poison8. or something like that
+	Resistance *resistance;//packed resistances Fire8Ice8Lightning8Poison8. or something like that
 public:
 	Armour(void);
 	~Armour(void);
@@ -24,6 +24,7 @@ public:
 	int getAV(void);
 	Resistance* getResistance(void);
 	list<Buff*>* getBuffs(void);
+	std::string* getInvString(void);
 };
 
 

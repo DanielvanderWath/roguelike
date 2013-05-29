@@ -1,6 +1,8 @@
 #ifndef __RESISTANCE_H__
 #define __RESISTANCE_H__
 
+#include <string>
+
 class Resistance
 {
 protected:
@@ -14,6 +16,7 @@ public:
 	int getIce(void);
 	int getLightning(void);
 	int getPoison(void);
+	std::string getInvString(void);
 	void zero(void);
 	void add(int _fire, int _ice, int _lightning, int _poison);
 	void add(Resistance *other);

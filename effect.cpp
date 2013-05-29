@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include "effect.h"
 
 using namespace std;
@@ -7,10 +7,9 @@ using namespace std;
 Effect::Effect(void){}
 Effect::~Effect(void){}
 
-Effect::Effect(const char *n, EFFECT_TYPE _eType, int magnitudeA, int magnitudeB)
+Effect::Effect(std::string n, EFFECT_TYPE _eType, int magnitudeA, int magnitudeB)
 {
-	name = new char[strlen(n)+1];
-	strcpy(name, n);
+	name = n;
 	eType = _eType;
 	mA = magnitudeA;
 	mB = magnitudeB;
@@ -43,3 +42,23 @@ void Effect::poison(Character *wielder, Character *target, bool crit)
 	}
 }
 
+// *** return a string, primarily used for describing the item's important stats ***
+std::string *Effect::getInvString(void)
+{
+	if(strStats.length() == 0)
+	{
+		std::stringstream strStream;
+		switch(eType)
+		{
+			case EFFECT_NONE:
+				break;
+			case WEAPON_EFFECT_POISON:
+				strStream << name << ": " << mA << " damage over " << mB << " turns";
+				break;
+			default:
+				OUTPUT("ERROR: Invalid effect " << eType);
+		}
+		strStats = strStream.str();
+	}
+	return &strStats; 
+}

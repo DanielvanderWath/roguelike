@@ -17,6 +17,7 @@ class Item
 {
 protected:
 	std::string name;
+	std::string strStats;
 	char icon;
 	int slot; //slot 0 is the character's inventory. Everything else is character specific
 	list<int> allowed_slots;
@@ -33,6 +34,7 @@ public:
 	void setSlot(int s);
 	bool isAllowedInSlot(int _slot);
 	std::string* getName(void);
+	virtual std::string* getInvString(void);
 };
 
 #endif

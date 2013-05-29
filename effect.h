@@ -14,17 +14,19 @@ enum EFFECT_TYPE
 class Effect
 {
 protected:
-	char *name;
+	std::string name;
+	std::string strStats;
 	EFFECT_TYPE eType;
 	int mA, mB;//depending on the nature of the effect. e.g. poison is damage and duration
 	void (Effect::*cast)(Character*, Character*, bool);
 public:
 	Effect(void);
 	~Effect(void);
-	Effect(const char *n, EFFECT_TYPE _eType, int magnitudeA, int magnitudeB);
+	Effect(std::string n, EFFECT_TYPE _eType, int magnitudeA, int magnitudeB);
 	//effects
 	void callEffectFunc(Character *wielder, Character *target, bool crit);
 	void poison(Character *wielder, Character *target, bool crit);
+	std::string* getInvString(void);
 };
 
 #endif

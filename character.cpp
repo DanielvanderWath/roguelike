@@ -87,7 +87,7 @@ void Character::listInventory(void)
 		OUTPUT(name << " has the following items in " << possessive_pronoun[gender] << " inventory:");
 
 		for(list<Item*>::iterator it=inventory.begin(); it != inventory.end(); it++)
-			OUTPUTI(*(*it)->getName(), 1);
+			OUTPUT(*(*it)->getInvString());
 	}
 	else
 		OUTPUT(name << " has nothing in " << possessive_pronoun[gender] << " inventory.");

@@ -7,7 +7,7 @@ class Character;
 
 Buff::Buff(void)
 {
-	name = NULL;
+	name = "";
 	hpPerTurn = 0;
 	mpPerTurn = 0;
 	AV = 0;
@@ -17,13 +17,11 @@ Buff::Buff(void)
 
 Buff::~Buff(void)
 {
-	delete name;
 }
 
-Buff::Buff(const char* _n, int _timeLeft)
+Buff::Buff(std::string _n, int _timeLeft)
 {
-	name = new char[strlen(_n)+1];
-	strcpy(name, _n);
+	name = _n;
 
 	timeLeft = _timeLeft;
 }
@@ -53,9 +51,9 @@ bool Buff::tick(Character* target)
 	return true;
 }
 
-const char* Buff::getName(void)
+std::string* Buff::getName(void)
 {
-	return (const char*)name;
+	return &name;
 }
 
 void Buff::setHPPerTurn(int hp)

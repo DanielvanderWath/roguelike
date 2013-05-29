@@ -15,9 +15,9 @@ Armour::Armour(std::string n, int av_min, int av_var, Resistance *_resistance,  
 
 	AV = av_min + (rand() % ++av_var);
 	if(_resistance)
-		resistance = Resistance(_resistance);
+		resistance = _resistance;
 	else
-		resistance.zero();
+		resistance = new Resistance();
 	icon = '[';
 
 	allowed_slots = _allowed_slots;
@@ -71,7 +71,7 @@ int Armour::getAV(void)
 
 Resistance* Armour::getResistance(void)
 {
-	return &resistance;
+	return resistance;
 }
 
 list<Buff*>* Armour::getBuffs(void)
@@ -79,3 +79,15 @@ list<Buff*>* Armour::getBuffs(void)
 	return &buffs;
 }
 
+// *** return a string, primarily used for describing the item's important stats ***
+std::string *Armour::getInvString(void)
+{
+	if(strStats.length() == 0)
+	{
+		std::stringstream strStream;
+		std::string strRes = resistance->getInvString();
+		strStream << name << " (AV:" << AV << (strRes.length() == 0 ? "" : (" " + strRes)) << ")";
+		strStats = strStream.str();
+	}
+	return &strStats; 
+}

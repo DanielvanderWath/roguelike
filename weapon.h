@@ -28,6 +28,7 @@ public:
 	void dumpStats(int indent);
 	bool attack(Character *target, bool offHand);
 	void addEffect(Effect *effect);
+	std::string* getInvString(void);
 };
 #endif
 
