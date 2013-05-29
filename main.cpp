@@ -70,18 +70,25 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 {
 	bool bFinished = false, bUnlimited = maxAllowed > 0 ? false : true;
 	list<std::string*> itemNames;
-	int selection;
+	int iSelection, iCount;
 
 	while(!bFinished)
 	{
+		if(items->empty())
+		{
+			bFinished=true;
+			OUTPUT("There's nothing here to take");
+			continue;
+		}
+
 		//build a list of item names. This is done every iteration, so that the list the player sees is always correct
 		for(list<Item*>::iterator it = items->begin(); it != items->end(); it++)
 		{
 			itemNames.push_back((*it)->getInvString());
 		}
 
-		selection = DIALOGUE("What would you like to pick up?", itemNames);
-		if(selection < 0)
+		iSelection = DIALOGUE("What would you like to pick up?", itemNames);
+		if(iSelection < 0)
 		{
 			bFinished = true;
 		}
@@ -90,10 +97,20 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 			list<Item*>::iterator it = items->begin();
 			for(int i = 0; it != items->end(); i++, it++)
 			{
-				if(i == selection)
+				if(i == iSelection)
 				{
 					c->pickUp(*it);
 					it = items->erase(it);
+
+					if(!bUnlimited && ++iCount == maxAllowed)
+						bFinished=true;
+
+					if(items->empty())
+					{
+						bFinished=true;
+						OUTPUT("There's nothing left");
+					}
+
 					break;
 				}
 			}
