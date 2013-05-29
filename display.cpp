@@ -5,6 +5,13 @@ int Display::iWinWidth=0, Display::iWinHeight=0;
 bool Display::bUserInputSinceLastMessage = false;
 bool Display::bAskingPlayer = false;
 bool Display::bMessageFillWindow = true;//if there isn't a floor, the message buffer can fill the whole window
+bool Display::bHandlingColour = false;//true when output is expected to handle colour codes
+
+#define NC_COLOR_DEFAULT 	1
+#define NC_COLOR_RED 		2
+#define NC_COLOR_YELLOW 	3
+#define NC_COLOR_GREEN 		4
+#define NC_COLOR_BLUE 		5
 
 Display::Display(void)
 {
@@ -12,6 +19,23 @@ Display::Display(void)
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
+
+	//make sure we support colours
+	if(!has_colors())
+	{
+		cout << "Error: colour not supported" << endl;
+	}
+	else
+	{
+		start_color();
+		use_default_colors();
+		init_pair(NC_COLOR_DEFAULT, -1, -1);
+		init_pair(NC_COLOR_RED, COLOR_RED, -1);
+		init_pair(NC_COLOR_YELLOW, COLOR_YELLOW, -1);
+		init_pair(NC_COLOR_GREEN, COLOR_GREEN, -1);
+		init_pair(NC_COLOR_BLUE, COLOR_BLUE, -1);
+		attron(COLOR_PAIR(NC_COLOR_DEFAULT));
+	}
 
 	//hide the cursor
 	curs_set(0);
@@ -60,6 +84,34 @@ void Display::drawMap(Floor *floor)
 		return; \
 	} 
 
+void Display::hudStatLine(std::string strLabel, int iCurrent, int iMax, int y, int x)
+{
+	move(y, x);
+
+	//print the label
+	printw(strLabel.c_str());
+
+	//decide what colour the stats should be
+	if(3 * iMax / 4 <= iCurrent)
+	{
+		attron(COLOR_PAIR(NC_COLOR_GREEN));
+	}
+	else if(iMax / 3 <= iCurrent)
+	{
+		attron(COLOR_PAIR(NC_COLOR_YELLOW));
+	}
+	else
+	{
+		attron(COLOR_PAIR(NC_COLOR_RED));
+	}
+
+	//print the actual stats
+	printw("%d/%d", iCurrent, iMax);
+
+	//and finally reset the colours to default
+	attron(COLOR_PAIR(NC_COLOR_DEFAULT));
+}
+
 // *** draw the pc's HUD ***
 void Display::drawHUD(Character *pc, int iLeft)
 {
@@ -87,7 +139,7 @@ void Display::drawHUD(Character *pc, int iLeft)
 	mvprintw(iCursorY++, iLeft, std::string("Name: " + pc->getName()).substr(0, iWidth).c_str());
 	if(iCursorY >= iHeight)
 		return;
-	mvprintw(iCursorY++, iLeft, "HP: %d/%d", pc->getHP(), pc->getHPMax());
+	hudStatLine("HP: ", pc->getHP(), pc->getHPMax(), iCursorY++, iLeft);
 	if(iCursorY >= iHeight)
 		return;
 	mvprintw(iCursorY++, iLeft, "AV: %d", pc->getAV());
@@ -187,6 +239,49 @@ void Display::clearMessageBuffer(void)
 	}
 }
 
+// *** print a string containing colour codes (beginning with ¬) ***
+void Display::printw_colour(std::string str)
+{
+	std::string::iterator it = str.begin();
+
+	for(it; it != str.end(); it++)
+	{
+		if(*it == '`')
+		{
+			//get the next character, which will describe the colour
+			switch(*(++it))
+			{
+				case 'R':
+					attron(COLOR_PAIR(NC_COLOR_RED));
+					break;
+				case 'Y':
+					attron(COLOR_PAIR(NC_COLOR_YELLOW));
+					break;
+				case 'G':
+					attron(COLOR_PAIR(NC_COLOR_GREEN));
+					break;
+				case 'B':
+					attron(COLOR_PAIR(NC_COLOR_BLUE));
+					break;
+				case 'D':
+					attron(COLOR_PAIR(NC_COLOR_DEFAULT));
+					break;
+				default:
+					//invalid colour code. OUTPUT here might cause problems, so report the error with cout
+					cout << "ERROR: invalid colour code ¬" << *it << endl;
+					break;
+			}
+		}
+		else
+		{
+			addch(*it);
+		}
+	}
+
+	//set the colour back to default
+	attron(COLOR_PAIR(NC_COLOR_DEFAULT));
+}
+
 void Display::output(std::string str)
 {
 	int iWidth, iHeight;
@@ -217,9 +312,21 @@ void Display::output(std::string str)
 	list<std::string>::iterator it=buffer.begin();
 	for(i; i < buffer.size(); i++)
 	{
+		//clear line
 		move(iHeight-1 - i, 0);
 		clrtoeol();
-		mvprintw(iHeight-1 - i, 0, (*it++).c_str());
+
+		//ensure cursor is at the start of the line
+		move(iHeight-1 - i, 0);
+
+		if(bHandlingColour)
+		{
+			printw_colour((*it++).c_str());
+		}
+		else
+		{
+			printw((*it++).c_str());
+		}
 	}
 
 	refresh();
@@ -253,6 +360,12 @@ void Display::setUserInputTrue(void)
 void Display::setUserInputFalse(void)
 {
 	bUserInputSinceLastMessage = false;
+}
+
+// *** Tell output whether or not to parse colour codes. ***
+void Display::setUseColour(bool b)
+{
+	bHandlingColour = b;
 }
 
 // *** present the player with a question and a list of potential answers ***
@@ -295,7 +408,7 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 		//reset cChoice
 		cChoice = cZero;
 
-		//get the player's choice, ignore anything other than lower case letters a) to finished)
+		//get the player's choice, ignore invalid keys
 		while(true)
 		{
 			iKey = getch();	

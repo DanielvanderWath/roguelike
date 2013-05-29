@@ -16,10 +16,12 @@ protected:
 	static bool bUserInputSinceLastMessage;
 	static bool bAskingPlayer;
 	static bool bMessageFillWindow;
+	static bool bHandlingColour;
 public:
 	Display(void);
 	~Display(void);
 	static void drawMap(Floor *floor);
+	static void hudStatLine(std::string strLabel, int iCurrent, int iMax, int y, int x);
 	static void drawHUD(Character *pc, int iLeft);
 	static char getAppearance(FloorTile *tile);
 	static int getBufferSize(void);
@@ -27,9 +29,11 @@ public:
 	static void setBufferSize(int size);
 	static void waitForKey(int key);
 	static void clearMessageBuffer(void);
+	static void printw_colour(std::string str);
 	static void output(std::string str);
 	static void setUserInputTrue(void);
 	static void setUserInputFalse(void);
+	static void setUseColour(bool b);
 	static int dialogue(std::string str, std::list<std::string*> *lChoices);
 	static std::string* askUserForString(std::string strQuestion);
 };

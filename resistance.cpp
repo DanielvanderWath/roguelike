@@ -31,17 +31,17 @@ std::string Resistance::getInvString(void)
 	std::stringstream strRet;
 
 	if(fire)
-		strRet << "F" << fire;
+		strRet << COLOR_CODE_RED << "F" << fire;
 	if(ice)
-		strRet << "I" << ice;
+		strRet << COLOR_CODE_BLUE << "I" << ice;
 	if(lightning)
-		strRet << "L" << lightning;
+		strRet << COLOR_CODE_YELLOW << "L" << lightning;
 	if(poison)
-		strRet << "P" << poison;
+		strRet << COLOR_CODE_GREEN << "P" << poison;
 
 	//Prepend the string with something descriptive only if there's something to describe
 	if(strRet.str().length())
-		strRet.str("Res: " + strRet.str());
+		strRet.str("Res: " + strRet.str() + COLOR_CODE_DEFAULT);
 
 	return strRet.str();
 }

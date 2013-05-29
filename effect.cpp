@@ -53,7 +53,7 @@ std::string *Effect::getInvString(void)
 			case EFFECT_NONE:
 				break;
 			case WEAPON_EFFECT_POISON:
-				strStream << name << ": " << mA << " damage over " << mB << " turns";
+				strStream << name << ": " << COLOR_CODE_RED << mA << COLOR_CODE_DEFAULT << " damage over " << COLOR_CODE_BLUE << mB << COLOR_CODE_DEFAULT << " turns";
 				break;
 			default:
 				OUTPUT("ERROR: Invalid effect " << eType);

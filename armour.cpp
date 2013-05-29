@@ -86,7 +86,7 @@ std::string *Armour::getInvString(void)
 	{
 		std::stringstream strStream;
 		std::string strRes = resistance->getInvString();
-		strStream << name << " (AV:" << AV << (strRes.length() == 0 ? "" : (" " + strRes)) << ")";
+		strStream << name << " (AV:" << COLOR_CODE_YELLOW << AV << COLOR_CODE_DEFAULT << (strRes.length() == 0 ? "" : (" " + strRes)) << ")";
 		strStats = strStream.str();
 	}
 	return &strStats; 

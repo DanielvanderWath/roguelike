@@ -87,7 +87,9 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 			itemNames.push_back((*it)->getInvString());
 		}
 
+		display.setUseColour(true);
 		iSelection = DIALOGUE("What would you like to pick up?", itemNames);
+		display.setUseColour(false);
 		if(iSelection < 0)
 		{
 			bFinished = true;
@@ -254,7 +256,9 @@ void Game::doActionFromUser(void)
 				break;
 			case 'i':
 				//go to inventory screen. for now just list inventory
+				display.setUseColour(true);
 				pc->listInventory();
+				display.setUseColour(false);
 				break;
 			case ';':
 				//pick up items from floor

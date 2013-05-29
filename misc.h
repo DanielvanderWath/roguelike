@@ -10,6 +10,12 @@ enum DIRECTION
 	DIRECTION_INVALID,
 };
 
+#define COLOR_CODE_RED 		"`R"
+#define COLOR_CODE_YELLOW 	"`Y"
+#define COLOR_CODE_GREEN 	"`G"
+#define COLOR_CODE_BLUE 	"`B"
+#define COLOR_CODE_DEFAULT 	"`D"
+
 //TODO: make this safe
 #define INDENTER(X, Y)	char *Y = new char[X+1]; \
 			memset(Y, '\t', X); \

@@ -75,7 +75,7 @@ std::string* Weapon::getInvString(void)
 	{
 		std::stringstream strStream;
 
-		strStream << name << "(" << damage_min << "-" << damage_min + damage_var << ")";
+		strStream << name << "(" << COLOR_CODE_GREEN << damage_min << COLOR_CODE_DEFAULT << "-" << COLOR_CODE_RED << damage_min + damage_var << COLOR_CODE_DEFAULT << ")";
 		for(list<Effect*>::iterator it=effects.begin(); it != effects.end(); it++)
 			strStream << " " << *(*it)->getInvString();
 		strStats = strStream.str();
