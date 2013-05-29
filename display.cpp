@@ -263,12 +263,21 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 	bool bFinished = false;
 	std::list<std::string*>::iterator it = lChoices->begin();
 
+#define NUM_FLUFF 3 //this is the number of menu items added here that don't belong to lChoices, + 1
+
 	while(!bFinished)
 	{
 		//ask the question
 		OUTPUT(strQuestion);
 
-		while(cChoice + 3 - 'a' < bufferSize && it != lChoices->end())
+		//if we've "seen more" past the end of the list, then wrap around
+		if(it == lChoices->end())
+		{
+			iChoice = 0;
+			it = lChoices->begin();
+		}
+
+		while(cChoice + NUM_FLUFF - cZero < bufferSize && it != lChoices->end())
 		{
 			bUserInputSinceLastMessage = true;
 			OUTPUT(cChoice++ << ") " << *(*it++));
@@ -288,7 +297,7 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 
 		//get the player's choice
 		iKey = getch();	
-		iSelection = iKey - cChoice;
+		iSelection = iKey - cZero;
 		if(iSelection < cMore & iSelection >= 0)
 		{
 			//they chose an option from the list on screen
@@ -305,7 +314,7 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 		else if(iSelection == cMore)
 		{
 			//they want to see more
-			iChoice+= bufferSize -1;
+			iChoice+= bufferSize - NUM_FLUFF;
 		}
 		else
 		{
