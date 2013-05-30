@@ -38,10 +38,8 @@ Character::Character(std::string n, Race *r, Gender g):NamedThing(n, '@')
 	gender = g;
 
 	race = r;
-	hpmax = race->hp();
-	hp = hpmax;
-	mpmax = race->mp();
-	mp = mpmax;
+	iStrength = race->genStrength();
+	iConstitution = race->genConstition();
 	xp = 0;
 	xpValue = 0;
 
@@ -51,6 +49,10 @@ Character::Character(std::string n, Race *r, Gender g):NamedThing(n, '@')
 	right = NULL;
 
 	position = NULL;
+
+	calcStats();
+
+	hp=hpmax;
 }
 
 #define dump(X, Y)	OUTPUTI(X, indent); \
@@ -97,8 +99,7 @@ void Character::unequip_post(Item *a)
 	{
 		inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
 		a->setSlot(0);//remove the reference to the equipment slot from the item
-		calcDefence();//recalculate defensive stats after unequipping an item
-		OUTPUT( name << " unequipped " << *a->getName());
+		calcStats();//recalculate defensive stats after unequipping an item
 	}
 }
 
@@ -238,12 +239,16 @@ void Character::equip(Item *a, int slot)
 				return;
 		}
 		//recalculate defensive stats after equipping an item
-		calcDefence();
+		calcStats();
 	}
 }
 
-void Character::calcDefence(void)
+void Character::calcStats(void)
 {
+	//Calculate effective stats first, others are based on them
+	iStrengthEffective = iStrength;
+	iConstitutionEffective = iConstitution;
+
 	//store the sum of all armours' AVs and resistances in AV
 	AV = 0;
 	resistance.zero();
@@ -262,6 +267,13 @@ void Character::calcDefence(void)
 		AV += dynamic_cast<Shield*>(right)->getAV();
 		resistance.add(dynamic_cast<Shield*>(right)->getResistance());
 	}
+
+	//calculate max hp
+	hpmax = iStrengthEffective * 2 + iConstitutionEffective * 5;
+
+	//clamp current hp to hpmax
+	if(hp > hpmax)
+		hp = hpmax;
 }
 
 bool Character::attackBasic(Character *target)
@@ -295,14 +307,14 @@ bool Character::attackBasic(Character *target)
 	{
 		//attacking with one weapon. TODO: accuracy and dodge
 		OUTPUT( name << " attacks " << *target->getName() << " with " << possessive_pronoun[gender] << " " << *(bRight ? right : left)->getName());
-		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false);
+		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false, iStrengthEffective);
 	}
 	else
 	{
 		//attacking with both weapons. first decide which is the main hand. TODO: should the character have a preference, or should we go off heaviest/largest/most powerful? Assume right handed for the time being
-		bCrit = dynamic_cast<Weapon*>(right)->attack(target, false);
+		bCrit = dynamic_cast<Weapon*>(right)->attack(target, false, iStrengthEffective);
 		if(!bCrit)
-			bCrit = dynamic_cast<Weapon*>(left)->attack(target, true);
+			bCrit = dynamic_cast<Weapon*>(left)->attack(target, true, iStrengthEffective);
 	}
 
 	//tell the caller if we scored a critical hit
@@ -362,7 +374,7 @@ void Character::pickUp(Item* item)
 void Character::addBuff(Buff *b)
 {
 	buffs.push_back(b);
-	OUTPUT( name << " is now under the effect of " << b->getName() );
+	OUTPUT( name << " is now under the effect of " << *b->getName() );
 }
 
 void Character::addMP(int m)
@@ -489,7 +501,6 @@ bool Character::isDead(void)
 	if(hp < 1)
 	{
 		//this character has just been killed
-		OUTPUT( name << " is Dead" );
 		return true;
 	}
 	return false;

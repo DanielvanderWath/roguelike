@@ -4,21 +4,20 @@
 
 Race::Race(void){}
 Race::~Race(void){}
-Race::Race(std::string n, int hpm, int hpv, int mpm, int mpv):NamedThing(n)
+Race::Race(std::string n, int iStrMin, int iStrVar, int iConstMin, int iConstVar):NamedThing(n)
 {
-
-	hp_min=hpm;
-	hp_variance=hpv;
-	mp_min=mpm;
-	mp_variance=mpv;
+	iStrengthMin = iStrMin;
+	iStrengthVar = iStrVar;
+	iConstitutionMin = iConstMin;
+	iConstitutionVar = iConstVar;
 }
 
-int Race::hp(void)
+int Race::genStrength(void)
 {
-	return hp_min + (rand() % hp_variance);
+	return iStrengthMin + (rand() % iStrengthVar);
 }
 
-int Race::mp(void)
+int Race::genConstition(void)
 {
-	return mp_min + (rand() % mp_variance);
+	return iConstitutionMin + (rand() % iConstitutionVar);
 }

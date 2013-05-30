@@ -26,7 +26,7 @@ public:
 	Weapon(std::string n, int dmin, int dminvar, int dvar, int dvarvar, bool one);
 	void dumpSpecials(int s, int indent);
 	void dumpStats(int indent);
-	bool attack(Character *target, bool offHand);
+	bool attack(Character *target, bool offHand, int iWielderStrength);
 	void addEffect(Effect *effect);
 	std::string* getInvString(void);
 };

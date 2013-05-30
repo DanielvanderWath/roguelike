@@ -32,6 +32,8 @@ private:
 	int hp, hpmax, mp, mpmax;
 	int AV;
 	int xp, xpValue;
+	int iStrength, iConstitution;
+	int iStrengthEffective, iConstitutionEffective;
 	FloorTile *position;
 	Resistance resistance;
 	int armourSpecial;
@@ -55,7 +57,7 @@ public:
 	void equip(Item *a, int slot);
 	void unequip(Item *a);
 	void unequip(int iSlot);
-	void calcDefence(void);
+	void calcStats(void);
 	bool attackBasic(Character *target);
 	bool hitPhysical(int damage);//attack* functions are this character attacking something else. hit* functions are this character being hit by something else
 	void pickUp(Item* item);

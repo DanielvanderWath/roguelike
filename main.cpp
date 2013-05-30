@@ -13,7 +13,7 @@ Character* Game::createPlayer(void)
 	OUTPUT("Welcome traveller!");
 	pstrName = ASK("What is your name?");
 
-	Race *tempRace = new Race("Human", 28, 4, 8, 4);
+	Race *tempRace = new Race("Human", 8, 4, 8, 4);
 
 	pCNewCharacter = new Character(*pstrName, tempRace, MALE);
 
@@ -301,6 +301,9 @@ void Game::kill(Character *killer, Character *killed)
 {
 	//take all of its items
 	list<Item*> lstDrop;
+
+	OUTPUT(*killed->getName() << " is killed!");
+
 	killed->giveInventory(&lstDrop);
 	//drop them on the floor
 	if(!lstDrop.empty())
@@ -361,7 +364,7 @@ void Game::spawnMonster(FloorTile *tile)
 	switch(i)
 	{
 		case 0:
-			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 16, 8, 12, 4), MALE);
+			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 8, 8, 16, 4), MALE);
 			tmp->equip(new Weapon("Rotten club", 3, 5, 3, 3, true), SLOT_HAND_RIGHT);
 			tmp->moveTo(tile);
 			break;

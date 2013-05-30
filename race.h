@@ -7,14 +7,14 @@
 class Race : public NamedThing
 {
 private:
-	int hp_min, hp_variance;
-	int mp_min, mp_variance;
+	int iStrengthMin, iStrengthVar;
+	int iConstitutionMin, iConstitutionVar;
 public:
 	Race(void);
 	~Race(void);
-	Race(std::string n, int hpm, int hpv, int mpm, int mpv);
-	int hp(void);
-	int mp(void);
+	Race(std::string n, int iStrMin, int iStrVar, int iConstMin, int iConstVar);
+	int genStrength(void);
+	int genConstition(void);
 };
 
 #endif
