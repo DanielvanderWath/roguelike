@@ -62,7 +62,7 @@ Character::Character(std::string n, Race *r, Gender g):NamedThing(n, '@')
 void Character::dumpStats(int indent)
 {
 	OUTPUTI("Name:\t" << name, indent);
-	OUTPUTI("Race:\t" << race->name(), indent);
+	OUTPUTI("Race:\t" << race->getName(), indent);
 	OUTPUTI("HP:\t" << hp << "/" << hpmax, indent);
 	OUTPUTI("AV:\t" << AV, indent);
 	OUTPUTI("MP:\t" << mpmax, indent);
@@ -285,23 +285,24 @@ bool Character::attackBasic(Character *target)
 		bNoWeapon = true;
 	}
 
-	if(!bDual)
+	if(bNoWeapon)
+	{
+		//unarmed attack
+		//TODO: decide what to do when attacking without a weapon
+		OUTPUT("TODO: nothing happens when you attack without a weapon" << endl);
+	}
+	else if(!bDual)
 	{
 		//attacking with one weapon. TODO: accuracy and dodge
-		OUTPUT( name << " attacks " << target->getName() << " with " << possessive_pronoun[gender] << " " << *(bRight ? right : left)->getName());
+		OUTPUT( name << " attacks " << *target->getName() << " with " << possessive_pronoun[gender] << " " << *(bRight ? right : left)->getName());
 		bCrit = dynamic_cast<Weapon*>(bRight ? right : left)->attack(target, false);
 	}
-	else if(!bNoWeapon)
+	else
 	{
 		//attacking with both weapons. first decide which is the main hand. TODO: should the character have a preference, or should we go off heaviest/largest/most powerful? Assume right handed for the time being
 		bCrit = dynamic_cast<Weapon*>(right)->attack(target, false);
 		if(!bCrit)
 			bCrit = dynamic_cast<Weapon*>(left)->attack(target, true);
-	}
-	else
-	{
-		//TODO: decide what to do when attacking without a weapon
-		OUTPUT("TODO: nothing happens when you attack without a weapon" << endl);
 	}
 
 	//tell the caller if we scored a critical hit
@@ -412,8 +413,9 @@ void Character::moveTo(FloorTile *tile)
 	if(position)
 		position->leave();
 
-	tile->occupy(this);
-	position = tile;
+	//returns true on success. 
+	if(tile->occupy(this))
+		position = tile;
 }
 
 // *** Return the FloorTile the Character is currently standing on ***

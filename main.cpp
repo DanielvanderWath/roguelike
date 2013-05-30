@@ -44,6 +44,9 @@ void Game::init(void)
 	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
 	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
 	spawnItem(floor->getTile(MAP_WIDTH/2 + 2, MAP_HEIGHT/2));
+
+	//spawn a monster
+	spawnMonster(floor->getTile(MAP_WIDTH/2 - 2, MAP_HEIGHT/2));
 }
 
 // *** try to move character to the adjacent space in the given direction. return true if it moved, false otherwise ***
@@ -52,8 +55,20 @@ bool Game::moveCharacter(Character *c, DIRECTION dir)
 	FloorTile *old = c->getPosition();
 	FloorTile *next = floor->getTile(old, dir);
 
+	//If there is a character on the tile, then attack it
+	if(next && next->getOccupier())
+	{
+		Character *pTarget = next->getOccupier();
+
+		c->attackBasic(pTarget);
+		if(pTarget->isDead())
+		{
+			kill(c, pTarget);
+		}
+		return false;
+	}
 	//if next is still NULL then we were unable to move
-	if(next)
+	else if(next)
 	{
 		c->moveTo(next);
 		return true;
@@ -89,7 +104,6 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 
 		display.setUseColour(true);
 		iSelection = DIALOGUE("What would you like to pick up?", itemNames);
-		display.setUseColour(false);
 		if(iSelection < 0)
 		{
 			bFinished = true;
@@ -117,6 +131,7 @@ void Game::pickUpItems(Character *c, list<Item*>* items, int maxAllowed)
 				}
 			}
 		}
+		display.setUseColour(false);
 
 		//clear the list so it can be refilled without any removed items on the next iteration
 		itemNames.clear();
@@ -186,6 +201,7 @@ void Game::equipItemFromInventory(void)
 			}
 
 			//if they do, present them with the choices
+			display.setUseColour(true);
 			iItem = DIALOGUE("What do you want to equip?", itemNames);
 
 			if(iItem < 0)
@@ -208,6 +224,9 @@ void Game::equipItemFromInventory(void)
 				
 			}
 			bFinished = true;
+
+			//turning colour off before equipping the item will display colour codes during the "player picked up item" message
+			display.setUseColour(false);
 		}
 	}
 }
@@ -278,26 +297,28 @@ void Game::doActionFromUser(void)
 	}
 }
 
-void Game::kill(Character *killer, Character **killed)
+void Game::kill(Character *killer, Character *killed)
 {
 	//take all of its items
 	list<Item*> lstDrop;
-	(*killed)->giveInventory(&lstDrop);
+	killed->giveInventory(&lstDrop);
 	//drop them on the floor
 	if(!lstDrop.empty())
 	{
-		OUTPUT((*killed)->getName() << " drops:" );
+		OUTPUT(*killed->getName() << " drops:" );
 		while(!lstDrop.empty())
 		{
-			OUTPUT("\t" << lstDrop.front()->getName() );
-			(*killed)->getPosition()->getInventory()->push_back(lstDrop.front());
+			OUTPUT("\t" << *lstDrop.front()->getName() );
+			killed->getPosition()->getInventory()->push_back(lstDrop.front());
 			lstDrop.pop_front();
 		}
 	}
 
-	killer->addXP((*killed)->getXPValue());
-	delete *killed;
-	(*killed) = NULL;
+	//unoccupy the tile
+	killed->getPosition()->leave();
+	
+	killer->addXP(killed->getXPValue());
+	delete killed;
 }
 
 // *** spawn an item on a floor tile ***
@@ -324,6 +345,25 @@ void Game::spawnItem(FloorTile *tile)
 			break;
 		case 4:
 			tile->dropItem(new Weapon("Pointy stick", 2, 2, 2, 2, true));
+			break;
+		default:
+			break;
+	}
+	i++;
+}
+
+// *** spawn a monster on a floor tile ***
+void Game::spawnMonster(FloorTile *tile)
+{
+	static int i =0;//TODO REWRITE THIS WHOLE FUNCTION
+	Character* tmp;
+
+	switch(i)
+	{
+		case 0:
+			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 16, 8, 12, 4), MALE);
+			tmp->equip(new Weapon("Rotten club", 3, 5, 3, 3, true), SLOT_HAND_RIGHT);
+			tmp->moveTo(tile);
 			break;
 		default:
 			break;
