@@ -176,7 +176,7 @@ char Display::getAppearance(FloorTile *tile)
 {
 	//any character on this tile takes priority when drawing
 	if(tile->isOccupied())	
-		return tile->getOccupier()->getAppearance();
+		return tile->getAppearance();
 	//then the item on top of the pile, if there is one
 	if(!tile->getInventory()->empty())
 		return tile->getInventory()->front()->getAppearance();
@@ -390,20 +390,18 @@ int Display::dialogue(std::string strQuestion, std::list<std::string*> *lChoices
 			it = lChoices->begin();
 		}
 
-		while(cChoice + NUM_FLUFF - cZero < bufferSize && it != lChoices->end())
+		while(cChoice + 1 - cZero < bufferSize && it != lChoices->end())
 		{
 			bUserInputSinceLastMessage = true;
 			OUTPUT(cChoice++ << ") " << *(*it++));
 		}
 
-		//if we haven't reached the end of the list, then we've filled the buffer, so offer to print out another page
+		//if we haven't reached the end of the list, then we've filled the buffer, so offer to print out another page or leave
 		bUserInputSinceLastMessage = true;
 		cMore = cChoice - cZero;
-		OUTPUT(cChoice++ << ") see more");
+		OUTPUT((char)(cChoice) << ") see more\t" << (char)(cChoice + 1) << ") finished");
 
-		bUserInputSinceLastMessage = true;
-		cFinish = cChoice - cZero;
-		OUTPUT(cChoice << ") finished");
+		cFinish = ++cChoice - cZero;
 
 		//reset cChoice
 		cChoice = cZero;
