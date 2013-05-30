@@ -7,6 +7,7 @@
 #include "resistance.h"
 #include "buff.h"
 #include "floor.h"
+#include "thing.h"
 #include <list>
 #include <string>
 
@@ -25,7 +26,7 @@ enum Gender
 	THEM,
 };
 
-class Character
+class Character : public NamedThing
 {
 private:
 	int hp, hpmax, mp, mpmax;
@@ -34,8 +35,6 @@ private:
 	FloorTile *position;
 	Resistance resistance;
 	int armourSpecial;
-	string name;
-	char appearance;
 	Gender gender;
 	Race *race;
 	//Class *cclass;
@@ -67,8 +66,6 @@ public:
 	void removeAllBuffs(void);
 	void moveTo(FloorTile *tile);
 	FloorTile* getPosition(void);
-	std::string getName(void);
-	char getAppearance(void);
 	int getAV(void);
 	int getHP(void);
 	int getHPMax(void);

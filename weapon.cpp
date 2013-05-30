@@ -5,23 +5,17 @@
 
 using namespace std;
 
-Weapon::Weapon(void){name = "";}
+Weapon::Weapon(void):Item(){}
 Weapon::~Weapon(void){}
 
-Weapon::Weapon(std::string n, int dmin, int dminvar, int dvar, int dvarvar, bool one)
+Weapon::Weapon(std::string n, int dmin, int dminvar, int dvar, int dvarvar, bool one):Item(n, '(')
 {
-	//TODO: error check
-	name = n;
-	
-
 	damage_min = dmin + (rand() % dminvar);
 	damage_var = dvar + (rand() % dvarvar);
 
 	onehanded = one;
 	weapon = true;
 	shield = false;
-
-	icon = ')';
 
 	allowed_slots.push_back(SLOT_HAND_LEFT);
 	allowed_slots.push_back(SLOT_HAND_RIGHT);
@@ -37,7 +31,7 @@ void Weapon::dumpSpecials(int s, int indent)
 void Weapon::dumpStats(int indent)
 {
 	OUTPUTI("Name:\t" << name, indent);
-	OUTPUTI("Icon:\t" << icon, indent);
+	OUTPUTI("Icon:\t" << getAppearance(), indent);
 	OUTPUTI("Damage:\t" << damage_min << "-" << damage_min + damage_var, indent);
 	//TODO: rewrite dumpSpecials to use effects
 	//dumpSpecials(special, indent+1);

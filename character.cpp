@@ -18,7 +18,7 @@ const char *personal_pronoun[]={	"he",
 					"they",
 				};
 
-Character::Character(void){}
+Character::Character(void):NamedThing(){}
 Character::~Character(void)
 {
 	//inventory should have already been dropped
@@ -31,15 +31,11 @@ Character::~Character(void)
 	}
 }
 
-Character::Character(std::string n, Race *r, Gender g)
+Character::Character(std::string n, Race *r, Gender g):NamedThing(n, '@')
 {
-	name = n;
-
 	OUTPUT("name = " << name << endl);
 
 	gender = g;
-
-	appearance = '@';
 
 	race = r;
 	hpmax = race->hp();
@@ -96,10 +92,14 @@ void Character::listInventory(void)
 // *** post unequip housekeeping ***
 void Character::unequip_post(Item *a)
 {
-	inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
-	a->setSlot(0);//remove the reference to the equipment slot from the item
-	calcDefence();//recalculate defensive stats after unequipping an item
-	OUTPUT( name << " unequipped " << *a->getName());
+	//do nothing if passed a NULL item
+	if(a)
+	{
+		inventory.push_back(a);// do this after so that we don't add an invalid item to the inventory in the event of an error
+		a->setSlot(0);//remove the reference to the equipment slot from the item
+		calcDefence();//recalculate defensive stats after unequipping an item
+		OUTPUT( name << " unequipped " << *a->getName());
+	}
 }
 
 // *** unequip an item ***
@@ -420,18 +420,6 @@ void Character::moveTo(FloorTile *tile)
 FloorTile* Character::getPosition(void)
 {
 	return position;
-}
-
-// *** return a char array containing the Character's name ***
-std::string Character::getName(void)
-{
-	return name;
-}
-
-// *** return the char used to represent the Character when drawing it ***
-char Character::getAppearance(void)
-{
-	return appearance;
 }
 
 // *** return the Character's armour value ***

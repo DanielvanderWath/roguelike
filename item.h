@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include "buff.h"
+#include "thing.h"
 
 using namespace std;
 
@@ -13,12 +14,10 @@ using namespace std;
 #define SLOT_HAND_LEFT 2
 #define SLOT_HAND_RIGHT 3
 
-class Item
+class Item : public NamedThing
 {
 protected:
-	std::string name;
 	std::string strStats;
-	char icon;
 	int slot; //slot 0 is the character's inventory. Everything else is character specific
 	list<int> allowed_slots;
 	list<Buff*> buffs;
@@ -26,11 +25,11 @@ public:
 	static std::string astrSlotNames[];
 
 	Item(void);
+	Item(std::string n, char a);
 	virtual ~Item(void);
 	virtual void dumpStats(void);
 	void addBuff(Buff *_buff);
 	int getSlot(void);
-	char getAppearance(void);
 	void setSlot(int s);
 	bool isAllowedInSlot(int _slot);
 	std::string* getName(void);

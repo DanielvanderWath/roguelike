@@ -6,18 +6,19 @@ project(roguelike)
 add_executable(	roguelike 
 
 		armour.cpp
-		character.cpp
-		race.cpp
-		weapon.cpp
-		hand.cpp
-		item.cpp
-		resistance.cpp
-		shield.cpp
 		buff.cpp
+		character.cpp
+		display.cpp
 		effect.cpp
 		floor.cpp
 		floortile.cpp
-		display.cpp
+		hand.cpp
+		item.cpp
+		race.cpp
+		resistance.cpp
+		shield.cpp
+		thing.cpp
+		weapon.cpp
 
 		armour.h
 		buff.h
@@ -32,6 +33,7 @@ add_executable(	roguelike
 		race.h
 		resistance.h
 		shield.h
+		thing.h
 		weapon.h
 
 		main.cpp)

@@ -8,12 +8,13 @@ std::string Item::astrSlotNames[] = {	"Inventory",
 						"Right Hand",
 						};
 
-Item::Item(void){slot=0; name=""; icon=' ';}
+Item::Item(void):NamedThing(){slot=0;}
 Item::~Item(void){}
+Item::Item(std::string n, char a):NamedThing(n, a){slot=0;}
 
 void Item::dumpStats(void)
 {
-	OUTPUT("Name:\t" << name << "\nIcon:\t" << icon);
+	OUTPUT("Name:\t" << getName() << "\nIcon:\t" << getAppearance());
 }
 
 void Item::addBuff(Buff *_buff)
@@ -24,11 +25,6 @@ void Item::addBuff(Buff *_buff)
 int Item::getSlot(void)
 {
 	return slot;
-}
-
-char Item::getAppearance(void)
-{
-	return icon;
 }
 
 void Item::setSlot(int s)

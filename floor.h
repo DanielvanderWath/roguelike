@@ -7,7 +7,7 @@
 #include "character.h"
 #include "misc.h"
 
-class FloorTile
+class FloorTile : public Thing
 {
 protected:
 	std::list<Item*> inventory;
@@ -24,6 +24,7 @@ public:
 	void leave(void);
 	bool isOccupied(void);
 	Character* getOccupier(void);
+	char getAppearance(void);
 	int getX(void);
 	int getY(void);
 };

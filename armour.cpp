@@ -6,19 +6,15 @@
 
 using namespace std;
 
-Armour::Armour(void){}
+Armour::Armour(void):Item(){}
 Armour::~Armour(void){}
-Armour::Armour(std::string n, int av_min, int av_var, Resistance *_resistance,  list<Buff*> *_buffs, list<int> _allowed_slots)
+Armour::Armour(std::string n, int av_min, int av_var, Resistance *_resistance,  list<Buff*> *_buffs, list<int> _allowed_slots):Item(n, '[')
 {
-	//TODO: error check
-	name = n;
-
 	AV = av_min + (rand() % ++av_var);
 	if(_resistance)
 		resistance = _resistance;
 	else
 		resistance = new Resistance();
-	icon = '[';
 
 	allowed_slots = _allowed_slots;
 
@@ -51,7 +47,7 @@ void Armour::dumpBuffs(list<Buff*> s, int indent)
 void Armour::dumpStats(int indent)
 {
 	OUTPUTI("Name:\t" << name, indent);
-	OUTPUTI("Icon:\t" << icon, indent);
+	OUTPUTI("Icon:\t" << getAppearance(), indent);
 	OUTPUTI("AV:\t" << AV, indent);
 
 	OUTPUTI("Resistances:\n", indent);
@@ -80,7 +76,7 @@ list<Buff*>* Armour::getBuffs(void)
 }
 
 // *** return a string, primarily used for describing the item's important stats ***
-std::string *Armour::getInvString(void)
+std::string* Armour::getInvString(void)
 {
 	if(strStats.length() == 0)
 	{

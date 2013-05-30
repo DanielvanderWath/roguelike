@@ -136,7 +136,7 @@ void Display::drawHUD(Character *pc, int iLeft)
 	}
 	iCursorY = 1;
 
-	mvprintw(iCursorY++, iLeft, std::string("Name: " + pc->getName()).substr(0, iWidth).c_str());
+	mvprintw(iCursorY++, iLeft, std::string("Name: " + *(pc->getName())).substr(0, iWidth).c_str());
 	if(iCursorY >= iHeight)
 		return;
 	hudStatLine("HP: ", pc->getHP(), pc->getHPMax(), iCursorY++, iLeft);

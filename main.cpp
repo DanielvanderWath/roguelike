@@ -239,7 +239,8 @@ void Game::doActionFromUser(void)
 						key == KEY_UP 	|| key == 'k' ||
 						key == KEY_LEFT || key == 'l')
 					{
-						while(floor->getTile(pc->getPosition(), dir))
+						FloorTile* tmp;
+						while((tmp = floor->getTile(pc->getPosition(), dir)) && !tmp->isOccupied())
 						{
 							moveCharacter(pc, dir);
 						}

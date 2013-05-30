@@ -58,12 +58,29 @@ void FloorTile::leave(void)
 
 bool FloorTile::isOccupied(void)
 {
-	return occupier != NULL;
+	return occupier != NULL || !inventory.empty();
 }
 
 Character* FloorTile::getOccupier(void)
 {
 	return occupier;
+}
+
+// *** get the appearance of a tile. It will be the character there if there is one, otherwise the last item dropped here ***
+char FloorTile::getAppearance(void)
+{
+	if(occupier)
+	{
+		return occupier->getAppearance();
+	}
+	else if(!inventory.empty())
+	{
+		return inventory.back()->getAppearance();
+	}
+	else
+	{
+		return appearance;
+	}
 }
 
 int FloorTile::getX(void)
