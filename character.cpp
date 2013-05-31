@@ -3,6 +3,7 @@
 #include <string.h>
 #include "character.h"
 #include "game.h"
+#include "shield.h"
 
 using namespace std;
 

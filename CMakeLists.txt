@@ -5,6 +5,7 @@ project(roguelike)
 
 add_executable(	roguelike 
 
+		ai.cpp
 		armour.cpp
 		buff.cpp
 		character.cpp
@@ -21,6 +22,7 @@ add_executable(	roguelike
 		weapon.cpp
 
 		armour.h
+		ai.h
 		buff.h
 		character.h
 		display.h

@@ -8,7 +8,6 @@
 #include "hand.h"
 #include "effect.h"
 #include "misc.h"
-#include "display.h"
 
 class Character;
 class Effect;

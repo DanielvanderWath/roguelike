@@ -1,16 +1,14 @@
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "race.h"
-#include "display.h"
-#include "armour.h"
-#include "hand.h"
-#include "weapon.h"
+#include "ai.h"
 #include "character.h"
-#include "shield.h"
+#include "display.h"
 #include "misc.h"
 
 class Floor;
+class Display;
+class AI;
 
 class Game
 {
@@ -27,11 +25,14 @@ public:
 	void equipItemFromInventory(void);
 	void doActionFromUser(void);
 	void kill(Character *killer, Character *killed);
+	void attack(Character *pAttacker, Character *pVictim);
 	bool moveCharacter(Character *c, DIRECTION dir);
+	bool moveCharacterTowards(Character *c, FloorTile *pTile);
 	void pickUpItems(Character *c, list<Item*>* items, int maxAllowed);
 	void spawnItem(FloorTile *tile);
 	void spawnMonster(FloorTile *tile);
 	Floor *getFloor(void);
+	void tickAI(void);
 	void mainLoop(void);
 };
 

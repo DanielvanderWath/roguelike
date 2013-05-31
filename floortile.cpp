@@ -1,5 +1,6 @@
 #include <iostream>
 #include "floor.h"
+#include "display.h"
 
 FloorTile::FloorTile(void)
 {
@@ -59,6 +60,22 @@ void FloorTile::leave(void)
 bool FloorTile::isOccupied(void)
 {
 	return occupier != NULL || !inventory.empty();
+}
+
+// *** return true if this tile is adjacent to the one pointed to by pOther. Deliberately ignoring diagonals becuase characters can only move in four directions ***
+bool FloorTile::isAdjacent(FloorTile *pOther)
+{
+	if(!pOther)
+		return false;
+
+	if(pOther->getX() == x)
+		if(pOther->getY() - y == 1 || pOther->getY() - y == -1)
+			return true;
+	if(pOther->getY() == y)
+		if(pOther->getX() - x == 1 || pOther->getX() - x == -1)
+			return true;
+
+	return false;
 }
 
 Character* FloorTile::getOccupier(void)

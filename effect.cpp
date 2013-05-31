@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "effect.h"
+#include "display.h"
 
 using namespace std;
 

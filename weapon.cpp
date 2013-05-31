@@ -1,4 +1,5 @@
 #include "weapon.h"
+#include "display.h"
 #include <iostream>
 #include <cstdlib>
 #include <string.h>

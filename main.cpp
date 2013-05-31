@@ -1,4 +1,5 @@
 #include "game.h"
+#include "shield.h"
 #include <ctime>
 #include <cstdlib>
 
@@ -49,22 +50,27 @@ void Game::init(void)
 	spawnMonster(floor->getTile(MAP_WIDTH/2 - 2, MAP_HEIGHT/2));
 }
 
+// *** have one character attack another, then handle the victim's death if need be ***
+void Game::attack(Character *pAttacker, Character *pVictim)
+{
+	pAttacker->attackBasic(pVictim);
+	if(pVictim->isDead())
+	{
+		kill(pAttacker, pVictim);
+	}
+}
+
 // *** try to move character to the adjacent space in the given direction. return true if it moved, false otherwise ***
 bool Game::moveCharacter(Character *c, DIRECTION dir)
 {
 	FloorTile *old = c->getPosition();
-	FloorTile *next = floor->getTile(old, dir);
+	FloorTile *next = floor->getTile(old, dir, 1);
 
 	//If there is a character on the tile, then attack it
 	if(next && next->getOccupier())
 	{
 		Character *pTarget = next->getOccupier();
-
-		c->attackBasic(pTarget);
-		if(pTarget->isDead())
-		{
-			kill(c, pTarget);
-		}
+		attack(c, pTarget);
 		return false;
 	}
 	//if next is still NULL then we were unable to move
@@ -78,6 +84,65 @@ bool Game::moveCharacter(Character *c, DIRECTION dir)
 		pc->bump();
 		return false;
 	}
+}
+
+// *** move character towards the target locaton. returns true if the character actually moved ***
+bool Game::moveCharacterTowards(Character *c, FloorTile *pTile)
+{
+	bool bSuccess = false;
+
+	if(c && pTile)
+	{
+		FloorTile *pCharTile = c->getPosition();
+
+		//return false if the character is already at their destination
+		if(pTile == pCharTile)
+			return false;
+
+		//work out the x and y distances
+		int iXDistance = pTile->getX() - pCharTile->getX();
+		int iYDistance = pTile->getY() - pCharTile->getY();
+
+		//move in the direction of the longest one. If that fails, try the shortest
+		//TODO: refine this, its too copy-pasted now
+		if(abs(iXDistance) > abs(iYDistance))
+		{
+			if(iXDistance > 0)
+				bSuccess = moveCharacter(c, DIRECTION_EAST);
+			else
+				bSuccess = moveCharacter(c, DIRECTION_WEST);
+
+			if(bSuccess)
+			{
+				return true;
+			}
+
+			//we failed to move the character so try the other axis
+			if(iYDistance > 0)
+				bSuccess = moveCharacter(c, DIRECTION_SOUTH);
+			else
+				bSuccess = moveCharacter(c, DIRECTION_NORTH);
+		}
+		else
+		{
+			if(iYDistance > 0)
+				bSuccess = moveCharacter(c, DIRECTION_SOUTH);
+			else
+				bSuccess = moveCharacter(c, DIRECTION_NORTH);
+
+			if(bSuccess)
+			{
+				return true;
+			}
+
+			//we failed to move the character so try the other axis
+			if(iXDistance > 0)
+				bSuccess = moveCharacter(c, DIRECTION_EAST);
+			else
+				bSuccess = moveCharacter(c, DIRECTION_WEST);
+		}
+	}
+	return bSuccess;
 }
 
 // *** allow the character to pick up items chosen through a dialogue presented to the player. Pass a greater-than-zero value in maxAllowed to limit the number of items the player is allowed to take ***
@@ -259,7 +324,7 @@ void Game::doActionFromUser(void)
 						key == KEY_LEFT || key == 'l')
 					{
 						FloorTile* tmp;
-						while((tmp = floor->getTile(pc->getPosition(), dir)) && !tmp->isOccupied())
+						while((tmp = floor->getTile(pc->getPosition(), dir, 1)) && !tmp->isOccupied())
 						{
 							moveCharacter(pc, dir);
 						}
@@ -359,7 +424,8 @@ void Game::spawnItem(FloorTile *tile)
 void Game::spawnMonster(FloorTile *tile)
 {
 	static int i =0;//TODO REWRITE THIS WHOLE FUNCTION
-	Character* tmp;
+	Character* tmp = NULL;
+	AI *ai = NULL;
 
 	switch(i)
 	{
@@ -372,6 +438,13 @@ void Game::spawnMonster(FloorTile *tile)
 			break;
 	}
 	i++;
+
+	if(tmp)
+	{
+			//create an AI to control the character
+			ai = new AI(tmp);
+			floor->addAI(ai);
+	}
 }
 
 Floor* Game::getFloor(void)
@@ -379,14 +452,29 @@ Floor* Game::getFloor(void)
 	return floor;
 }
 
+void Game::tickAI(void)
+{
+	std::list<AI*> *AIs = floor->getAIs();
+	for(std::list<AI*>::iterator it = AIs->begin(); it != AIs->end(); it++)
+	{
+		(*it)->tick(this);
+	}
+}
+
 void Game::mainLoop(void)
 {
 	while(!quit)
 	{
+		//draw screen
 		display.drawMap(getFloor());
 		display.drawHUD(pc, getFloor()->getWidth());
+
+		//take user action
 		doActionFromUser();
 		display.setUserInputTrue();
+
+		//move NPCs
+		tickAI();
 	}
 }
 
