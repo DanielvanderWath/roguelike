@@ -387,6 +387,12 @@ void Game::kill(Character *killer, Character *killed)
 	killed->getPosition()->leave();
 	
 	killer->addXP(killed->getXPValue());
+
+	if(killed == pc)
+	{
+		OUTPUT("GAME OVER :(");
+		quit = true;
+	}
 	delete killed;
 }
 
