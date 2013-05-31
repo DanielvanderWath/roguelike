@@ -36,6 +36,8 @@ public:
 	void tick(Game *pGame);
 	void setState(AIState state);
 	AIState getState(void);
+	Item* getBestItem(Item *A, Item *B);
+	void equipBestItems(void);
 };
 
 #endif

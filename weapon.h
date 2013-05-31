@@ -28,6 +28,7 @@ public:
 	bool attack(Character *target, bool offHand, int iWielderStrength);
 	void addEffect(Effect *effect);
 	std::string* getInvString(void);
+	int getQualityScore(void);
 };
 #endif
 

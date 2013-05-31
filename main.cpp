@@ -48,6 +48,7 @@ void Game::init(void)
 
 	//spawn a monster
 	spawnMonster(floor->getTile(MAP_WIDTH/2 - 2, MAP_HEIGHT/2));
+	spawnItem(floor->getTile(MAP_WIDTH/2 - 3, MAP_HEIGHT/2));
 }
 
 // *** have one character attack another, then handle the victim's death if need be ***
@@ -414,6 +415,8 @@ void Game::spawnItem(FloorTile *tile)
 		case 4:
 			tile->dropItem(new Weapon("Pointy stick", 2, 2, 2, 2, true));
 			break;
+		case 5:
+			tile->dropItem(new Weapon("Rotten club", 3, 5, 3, 3, true));
 		default:
 			break;
 	}
@@ -431,7 +434,6 @@ void Game::spawnMonster(FloorTile *tile)
 	{
 		case 0:
 			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 8, 8, 16, 4), MALE);
-			tmp->equip(new Weapon("Rotten club", 3, 5, 3, 3, true), SLOT_HAND_RIGHT);
 			tmp->moveTo(tile);
 			break;
 		default:

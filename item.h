@@ -34,6 +34,7 @@ public:
 	bool isAllowedInSlot(int _slot);
 	std::string* getName(void);
 	virtual std::string* getInvString(void);
+	virtual int getQualityScore(void);
 };
 
 #endif

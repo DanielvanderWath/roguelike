@@ -100,6 +100,8 @@ void AI::wander(Game *pGame)
 	int iFloorWidth = pGame->getFloor()->getWidth();
 	int iFloorHeight = pGame->getFloor()->getHeight();
 	int iDistance = rand()% ( iFloorWidth < iFloorHeight ? iFloorWidth : iFloorHeight) / 4;
+
+	eState = AI_WANDERING;
 }
 
 // *** update the current objective ***
@@ -208,6 +210,8 @@ void AI::tick(Game *pGame)
 				pCharacter->pickUp(lFloorInv->back());
 				lFloorInv->pop_back();
 			}
+			equipBestItems();
+			wander(pGame);
 			break;
 	}
 }
@@ -222,3 +226,57 @@ AIState AI::getState(void)
 	return eState;
 }
 
+// *** return a pointer to the item with the highest quality score ***
+Item* AI::getBestItem(Item* A, Item* B)
+{
+	// if this is the first item that fits in this slot select it
+	if(!A)
+	{
+		return B;
+	}
+	else if(!B)
+	{
+		return A;
+	}
+	else//if not, then compare it to the current best choice
+	{
+		if(A->getQualityScore() < B->getQualityScore())
+		{
+			return B;
+		}
+		else return A;
+	}
+
+}
+
+// *** go through the items in the character's inventory and equip the best ones
+void AI::equipBestItems(void)
+{
+	list<Item*> *plInventory = pCharacter->getInventory(); 
+	Item *pBestRight=pCharacter->getRightHand(), *pBestLeft=pCharacter->getLeftHand(), *pBestTorso=pCharacter->getTorso();
+
+	for(list<Item*>::iterator it = plInventory->begin(); it != plInventory->end(); it++)
+	{
+		if((*it)->isAllowedInSlot(SLOT_HAND_RIGHT) )
+		{
+			//only equip a weapon in the right hand
+			if(dynamic_cast<Hand*>(*it)->isWeapon())
+			{
+				pBestRight = getBestItem(pBestRight, (*it));
+			}
+		}
+		else if((*it)->isAllowedInSlot(SLOT_HAND_LEFT))
+		{
+			pBestLeft = getBestItem(pBestLeft, (*it));
+		}
+		else if((*it)->isAllowedInSlot(SLOT_TORSO))
+		{
+			pBestLeft = getBestItem(pBestTorso, (*it));
+		}
+	}
+
+	//equip the chosen items
+	pCharacter->equip(pBestTorso, SLOT_TORSO);
+	pCharacter->equip(pBestRight, SLOT_HAND_RIGHT);
+	pCharacter->equip(pBestTorso, SLOT_HAND_LEFT);
+}

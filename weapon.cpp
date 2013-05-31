@@ -78,3 +78,10 @@ std::string* Weapon::getInvString(void)
 	return &strStats;
 }
 
+// *** quantify weapon desirability for AI equipping decisions ***
+int Weapon::getQualityScore(void)
+{
+	//TODO: take more into account than max possible damage
+	return damage_min + damage_var;
+}
+

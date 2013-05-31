@@ -2,6 +2,7 @@
 #include <string.h>
 #include "buff.h"
 #include "character.h"
+#include "display.h"
 
 class Character;
 

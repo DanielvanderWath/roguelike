@@ -183,7 +183,7 @@ list<Item*>* Character::getInventory(void)
 
 void Character::equip(Item *a, int slot)
 {
-	if(a->isAllowedInSlot(slot))
+	if(a && a->isAllowedInSlot(slot))
 	{
 		switch(slot)
 		{
@@ -239,6 +239,8 @@ void Character::equip(Item *a, int slot)
 				OUTPUT( "Error: Trying to equip item in invalid slot");
 				return;
 		}
+		//remove the item from the inventory now that we've equipped it
+		inventory.remove(a);
 		//recalculate defensive stats after equipping an item
 		calcStats();
 	}

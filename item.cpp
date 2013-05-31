@@ -50,3 +50,9 @@ std::string* Item::getInvString(void)
 {
 	return &name;
 }
+
+int Item::getQualityScore(void)
+{
+	//if this isn't implemented by the inheritors then return 0
+	return 0;
+}
