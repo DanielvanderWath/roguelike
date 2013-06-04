@@ -44,11 +44,13 @@ FloorTile* AI::search(Game *pGame, Character *pTarg)
 		{
 			for(int x = left; x <= right; (y == top || y == bottom) ? x++ : (x+= right - left))
 			{
-				if(pFloor->getTile(x, y)->isOccupied())
+				FloorTile *pTile = pFloor->getTile(x, y);
+				//we don't want to target ourself. pTile might be where we're standing if we're up against a wall
+				if(pTile && pTile->isOccupied() && pTile->getOccupier() != pCharacter)
 				{
 					//if pTarg is NULL we'll take the first thing we find
-					if(!pTarg || pFloor->getTile(x, y)->getOccupier() == pTarg)
-						return pFloor->getTile(x, y);
+					if(!pTarg || pTile->getOccupier() == pTarg)
+						return pTile;
 				}
 			}
 		}
@@ -119,7 +121,7 @@ void AI::updateState(Game *pGame)
 				break;
 			}
 			//have we arrived at our target location without finding anything interesting? if so, wander off somewhere else
-			if(pCharacter->getPosition() == pTargetLocation)
+			if(!pTargetLocation || pCharacter->getPosition() == pTargetLocation)
 			{
 				wander(pGame);
 			}

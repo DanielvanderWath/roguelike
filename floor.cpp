@@ -72,7 +72,7 @@ std::list<AI*>* Floor::getAIs(void)
 // *** return tile at given coordinates ***
 FloorTile* Floor::getTile(int x, int y)
 {
-	if(x < width && y < height)
+	if(x >= 0 && y >= 0 && x < width && y < height)
 		return tiles[y*width + x];
 	return NULL;
 }
@@ -89,7 +89,7 @@ FloorTile* Floor::getTile(FloorTile *tile, DIRECTION dir, int iDistance)
 				ret = getTile(tile->getX() - iDistance, tile->getY());
 				//if it would be out of bounds, get the one adjacent to the wall instead
 				if(!ret)
-					getTile(0, tile->getY());
+					ret = getTile(0, tile->getY());
 			}
 			break;
 		case DIRECTION_SOUTH:
@@ -98,7 +98,7 @@ FloorTile* Floor::getTile(FloorTile *tile, DIRECTION dir, int iDistance)
 				ret = getTile(tile->getX(), tile->getY() + iDistance);
 				//if it would be out of bounds, get the one adjacent to the wall instead
 				if(!ret)
-					getTile(tile->getX(), getBottom());
+					ret = getTile(tile->getX(), getBottom());
 			}
 			break;
 		case DIRECTION_NORTH:
@@ -107,7 +107,7 @@ FloorTile* Floor::getTile(FloorTile *tile, DIRECTION dir, int iDistance)
 				ret = getTile(tile->getX(), tile->getY() - iDistance);
 				//if it would be out of bounds, get the one adjacent to the wall instead
 				if(!ret)
-					getTile(tile->getX(), 0);
+					ret = getTile(tile->getX(), 0);
 			}
 			break;
 		case DIRECTION_EAST:
@@ -116,7 +116,7 @@ FloorTile* Floor::getTile(FloorTile *tile, DIRECTION dir, int iDistance)
 				ret = getTile(tile->getX() + iDistance, tile->getY());
 				//if it would be out of bounds, get the one adjacent to the wall instead
 				if(!ret)
-					getTile(getRight(), tile->getY());
+					ret = getTile(getRight(), tile->getY());
 			}
 			break;
 		default:
