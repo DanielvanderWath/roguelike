@@ -34,8 +34,6 @@ Character::~Character(void)
 
 Character::Character(std::string n, Race *r, Gender g):NamedThing(n, '@')
 {
-	OUTPUT("name = " << name << endl);
-
 	gender = g;
 
 	race = r;

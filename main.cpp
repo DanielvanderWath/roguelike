@@ -393,7 +393,8 @@ void Game::kill(Character *killer, Character *killed)
 		OUTPUT("GAME OVER :(");
 		quit = true;
 	}
-	delete killed;
+
+	//don't delete the character here, leave that to the AI's destructor
 }
 
 // *** spawn an item on a floor tile ***
@@ -439,7 +440,7 @@ void Game::spawnMonster(FloorTile *tile)
 	switch(i)
 	{
 		case 0:
-			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 8, 8, 16, 4), MALE);
+			tmp = new Character("Gollum", new Race("Corrupted Hobbit", 1, 1, 1, 1), MALE);
 			tmp->moveTo(tile);
 			break;
 		default:
@@ -465,6 +466,16 @@ void Game::tickAI(void)
 	std::list<AI*> *AIs = floor->getAIs();
 	for(std::list<AI*>::iterator it = AIs->begin(); it != AIs->end(); it++)
 	{
+		//delete this AI if its character is dead
+		if((*it)->getCharacter()->isDead())
+		{
+			delete (*it);
+			it = AIs->erase(it);
+
+			//if this was the last one in the list then finish the loop before trying to tick the end
+			if(it == AIs->end())
+				continue;
+		}
 		(*it)->tick(this);
 	}
 }

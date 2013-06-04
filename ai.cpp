@@ -101,6 +101,9 @@ void AI::wander(Game *pGame)
 	int iFloorHeight = pGame->getFloor()->getHeight();
 	int iDistance = rand()% ( iFloorWidth < iFloorHeight ? iFloorWidth : iFloorHeight) / 4;
 
+	pTargetLocation = pGame->getFloor()->getTile(pCharacter->getPosition(), eWanderDirection, iDistance);
+	pTarget = NULL;
+
 	eState = AI_WANDERING;
 }
 
@@ -219,6 +222,12 @@ void AI::tick(Game *pGame)
 void AI::setState(AIState state)
 {
 	eState = state;
+}
+
+// *** get a pointer to the character ***
+Character* AI::getCharacter(void)
+{
+	return pCharacter;
 }
 
 AIState AI::getState(void)
